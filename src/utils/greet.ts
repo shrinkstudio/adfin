@@ -1,18 +1,12 @@
-import { getPublishDate } from '@finsweet/ts-utils';
+// NOTE: `@finsweet/ts-utils` is installed as a dependency but no longer imported
+// anywhere in src. It ships Webflow helpers (e.g. `getPublishDate`, CMS/list
+// utilities) — keep it if you plan to use them, otherwise it's safe to remove
+// with `pnpm remove @finsweet/ts-utils`.
 
 /**
  * Greets the user by printing a message in the console.
  * @param name The user's name.
  */
 export const greetUser = (name: string) => {
-  const publishDate = getPublishDate();
-
   console.log(`Hello ${name}!`);
-  console.log(
-    `This site was last published on ${publishDate?.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: '2-digit',
-    })}.`
-  );
 };
