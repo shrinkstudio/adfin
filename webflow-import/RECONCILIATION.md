@@ -258,3 +258,37 @@ Two source rows were deliberately dropped from the changelog import: slugs `lre`
 
 Downloads, Download Success, Legal, Competitor Comparisons, Integrations, FAQs, Testimonials,
 Customers. All need scraping from live static pages.
+
+---
+
+## 8. Page metadata port — 2026-08-18
+
+All 94 live page records exported to `page-metadata/` (see that folder's README for the full
+picture). SEO and Open Graph applied to 9 staging static pages and all 5 Case Studies items.
+Nothing on the live site was changed; no page title or slug was changed on staging.
+
+**Two API limits Shrink should know about before planning any more of this through MCP:**
+
+1. `bulk_update_pages` and `bulk_update_pages_schema_markup` both return **403
+   `insufficient_permissions`** on this token. Single-page `update_page_settings` works.
+2. `update_page_settings` **accepts `jsonLdSchema` and silently discards it** — success response,
+   nothing stored. Confirmed by reading the page back. So JSON-LD cannot be ported through the API
+   at all right now; it needs pasting in the Designer.
+
+**Structured data on live is thinner than expected** — only 6 of 94 pages have any, and two of
+those are wrong (Jumpstart and Nuvo both carry Gascoynes' Article schema, pointing at a dead
+canonical URL). Neither was ported. See `page-metadata/README.md`.
+
+**`redirect-map.csv` grew from 215 to 225 rows** with page-level entries. The blog and events
+*listings* move under `/resources/`, which the earlier item-level map did not cover:
+
+| Old | New |
+|---|---|
+| `/blog` | `/resources/blog` |
+| `/events` | `/resources/events` |
+| `/blog/insights`, `/blog/success-stories`, `/blog/life-at-adfin`, `/blog/product-and-tips` | `/resources/blog` |
+| `/integration-pages` | `/integrations` |
+
+Three old URLs have **no destination on staging** and need a decision: `/careers`, `/changelog`
+and `/faq`. Staging has the CMS item template at each of those paths but no equivalent landing
+page, so those URLs currently have nowhere to point.

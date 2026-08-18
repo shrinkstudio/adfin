@@ -1,0 +1,49 @@
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Adfin",
+  "url": "/",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Web",
+  "description": "The only platform to automate payment collection end-to-end. Eliminate manual work, reduce late payments and accelerate cash flow.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "GBP",
+    "availability": "https://schema.org/InStock",
+    "url": "https://console.adfin.com/auth/signup"
+  },
+  "featureList": [
+    "Direct debit payments",
+    "Card payments with Apple Pay and Google Pay",
+    "Bank transfer",
+    "Automatic reconciliation",
+    "AI-powered credit control",
+    "Automated payment reminders",
+    "Multi-channel reminders (email, WhatsApp, text)",
+    "Automatic late fees",
+    "Instalment plans",
+    "Xero integration",
+    "QuickBooks integration"
+  ],
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "reviewCount": "2500"
+  },
+  "provider": {
+    "@type": "Organization",
+    "name": "Adfin Financial Services Ltd",
+    "url": "/",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://cdn.prod.website-files.com/663608d6085a91363816e0cb/6a1d5cf32d7aa4edd78b4778_Adfin%20Logo.svg"
+    },
+    "email": "hello@adfin.com",
+    "identifier": "15449959",
+    "sameAs": [
+      "https://www.linkedin.com/company/adfin-fs/"
+    ]
+  },
+  "inLanguage": "en"
+}

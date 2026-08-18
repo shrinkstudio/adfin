@@ -214,3 +214,13 @@ https://adfin.com/case-studies/jumpstart,/case-studies/jumpstart,/case-studies/j
 https://adfin.com/case-studies/helpbox-uk,/case-studies/helpbox-uk,/case-studies/helpbox-uk,no change
 https://adfin.com/case-studies/pillow-may,/case-studies/pillow-may,/case-studies/pillow-may,no change
 https://adfin.com/case-studies/nuvo-accountancy,/case-studies/nuvo-accountancy,/case-studies/nuvo-accountancy,no change
+https://adfin.com/blog,/blog,/resources/blog,moves
+https://adfin.com/events,/events,/resources/events,moves
+https://adfin.com/blog/insights,/blog/insights,/resources/blog,moves - category page retired
+https://adfin.com/blog/success-stories,/blog/success-stories,/resources/blog,moves - category page retired
+https://adfin.com/blog/life-at-adfin,/blog/life-at-adfin,/resources/blog,moves - category page retired
+https://adfin.com/blog/product-and-tips,/blog/product-and-tips,/resources/blog,moves - category page retired
+https://adfin.com/integration-pages,/integration-pages,/integrations,moves
+https://adfin.com/careers,/careers,,"NO DESTINATION - staging /careers is the Open Positions item template, no careers landing page exists"
+https://adfin.com/changelog,/changelog,,NO DESTINATION - staging has the Changelogs item template at /changelog but no listing page
+https://adfin.com/faq,/faq,,"NO DESTINATION - staging /faqs is the FAQs item template, not a static FAQ page"
