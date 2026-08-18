@@ -1,0 +1,58 @@
+{
+  "source": {
+    "site": "Adfin",
+    "siteId": "663608d6085a91363816e0cb",
+    "workspaceId": "6641de8278cd626c4dbb9cfd",
+    "assetFolder": "Logos",
+    "assetFolderId": "683b238d8e482b390b0ba0f8",
+    "capturedOn": "2026-08-14",
+    "modified": false,
+    "note": "The Adfin site was NOT changed. Its assets still carry the original 'Client logos-N.png' names and original alt text, including three misspellings. All renaming and alt-text correction here is local only."
+  },
+  "destination": {
+    "site": "Adfin Staging",
+    "siteId": "6a69cb89a361f85b63b37d60",
+    "workspaceId": "63765059a2b39056142ead15",
+    "collection": "Logos",
+    "collectionId": "6a7f31d75c47c8102580cc9d",
+    "fieldSlugs": {
+      "name": "PlainText, required — brand name",
+      "slug": "PlainText, required — url slug",
+      "logo": "Image, required — primary logo",
+      "logo-inverse": "Image, optional — light version for dark backgrounds",
+      "alt-text": "PlainText, required — accessibility text",
+      "website": "Link, optional",
+      "case-study": "Reference to Case Studies (6a74aa6d7a69bb50f47e03ee), optional",
+      "customer-type": "Option, optional — Accountancy practice | Bookkeeper | Business | Partner",
+      "featured": "Switch, optional",
+      "display-order": "Number, optional"
+    }
+  },
+  "notes": {
+    "altText": "Every one of the 19 logos was visually inspected on 2026-08-14 and its alt text set from what the wordmark actually reads. These are final values, ready to write to the alt-text field.",
+    "hostedUrl": "Public S3 objects, verified fetchable without credentials. Use with asset_tool > upload_image_by_url against the destination siteId.",
+    "customerType": "Assigned only where the wordmark itself states the trade. Left null where it would be a guess — fill those in before relying on filtered strips.",
+    "displayOrder": "Left null throughout, which the field's help text defines as alphabetical sort."
+  },
+  "items": [
+    { "name": "55 Financial", "slug": "55-financial", "alt-text": "55 Financial logo", "customer-type": null, "fileName": "55-financial.png", "size": 1470, "sourceAssetId": "683b238074b03fc93b03f700", "hostedUrl": "https://s3.amazonaws.com/webflow-prod-assets/663608d6085a91363816e0cb/683b238074b03fc93b03f700_Client%20logos-14.png" },
+    { "name": "Accounts & Tax Made Easy", "slug": "accounts-and-tax-made-easy", "alt-text": "Accounts & Tax Made Easy logo", "customer-type": "Accountancy practice", "fileName": "accounts-and-tax-made-easy.png", "size": 12831, "sourceAssetId": "683b23801b3190fc20c65a7e", "hostedUrl": "https://s3.amazonaws.com/webflow-prod-assets/663608d6085a91363816e0cb/683b23801b3190fc20c65a7e_Client%20logos-18.png" },
+    { "name": "Emily Rose Vass", "slug": "emily-rose-vass", "alt-text": "Emily Rose Vass logo", "customer-type": null, "fileName": "emily-rose-vass.png", "size": 6638, "sourceAssetId": "683b2380cdebe0a37a56d488", "hostedUrl": "https://s3.amazonaws.com/webflow-prod-assets/663608d6085a91363816e0cb/683b2380cdebe0a37a56d488_Client%20logos-13.png" },
+    { "name": "Fresh Pay", "slug": "fresh-pay", "alt-text": "Fresh Pay logo", "customer-type": null, "fileName": "fresh-pay.png", "size": 5812, "sourceAssetId": "683b237fa203281d54530b3b", "hostedUrl": "https://s3.amazonaws.com/webflow-prod-assets/663608d6085a91363816e0cb/683b237fa203281d54530b3b_Client%20logos-5.png" },
+    { "name": "Harrisons Accountancy", "slug": "harrisons-accountancy", "alt-text": "Harrisons Accountancy logo", "customer-type": "Accountancy practice", "fileName": "harrisons-accountancy.png", "size": 2720, "sourceAssetId": "683b237fd8fc8ebbe930f672", "hostedUrl": "https://s3.amazonaws.com/webflow-prod-assets/663608d6085a91363816e0cb/683b237fd8fc8ebbe930f672_Client%20logos-6.png" },
+    { "name": "Helpbox", "slug": "helpbox", "alt-text": "Helpbox logo", "customer-type": null, "fileName": "helpbox.png", "size": 2295, "sourceAssetId": "683b237fdeda3af05623ec30", "hostedUrl": "https://s3.amazonaws.com/webflow-prod-assets/663608d6085a91363816e0cb/683b237fdeda3af05623ec30_Client%20logos-2.png" },
+    { "name": "Hunts Limited", "slug": "hunts-limited", "alt-text": "Hunts Limited logo", "customer-type": null, "fileName": "hunts-limited.png", "size": 5812, "sourceAssetId": "683b237fa0dfd8c4a1e3a16b", "hostedUrl": "https://s3.amazonaws.com/webflow-prod-assets/663608d6085a91363816e0cb/683b237fa0dfd8c4a1e3a16b_Client%20logos-11.png" },
+    { "name": "Jan McDermott Chartered Accountants", "slug": "jan-mcdermott-chartered-accountants", "alt-text": "Jan McDermott Chartered Accountants logo", "customer-type": "Accountancy practice", "fileName": "jan-mcdermott-chartered-accountants.png", "size": 2735, "sourceAssetId": "683b237fd6c35f1ddb9ece63", "hostedUrl": "https://s3.amazonaws.com/webflow-prod-assets/663608d6085a91363816e0cb/683b237fd6c35f1ddb9ece63_Client%20logos-0.png" },
+    { "name": "KnightsLowe", "slug": "knightslowe", "alt-text": "KnightsLowe logo", "customer-type": null, "fileName": "knightslowe.png", "size": 2472, "sourceAssetId": "683b2380cb9ea083f2ed9eed", "hostedUrl": "https://s3.amazonaws.com/webflow-prod-assets/663608d6085a91363816e0cb/683b2380cb9ea083f2ed9eed_Client%20logos-3.png" },
+    { "name": "Level Accounting", "slug": "level-accounting", "alt-text": "Level Accounting logo", "customer-type": "Accountancy practice", "fileName": "level-accounting.png", "size": 1543, "sourceAssetId": "683b237f8e482b390b0b9735", "hostedUrl": "https://s3.amazonaws.com/webflow-prod-assets/663608d6085a91363816e0cb/683b237f8e482b390b0b9735_Client%20logos-4.png" },
+    { "name": "Moore to Bookkeeping", "slug": "moore-to-bookkeeping", "alt-text": "Moore to Bookkeeping logo", "customer-type": "Bookkeeper", "fileName": "moore-to-bookkeeping.png", "size": 4580, "sourceAssetId": "683b237fc3b49d5f0516d90f", "hostedUrl": "https://s3.amazonaws.com/webflow-prod-assets/663608d6085a91363816e0cb/683b237fc3b49d5f0516d90f_Client%20logos-8.png" },
+    { "name": "More Than Bookkeeping", "slug": "more-than-bookkeeping", "alt-text": "More Than Bookkeeping logo", "customer-type": "Bookkeeper", "fileName": "more-than-bookkeeping.png", "size": 7286, "sourceAssetId": "683b23807b73298868c20a73", "hostedUrl": "https://s3.amazonaws.com/webflow-prod-assets/663608d6085a91363816e0cb/683b23807b73298868c20a73_Client%20logos-9.png" },
+    { "name": "NDC", "slug": "ndc", "alt-text": "NDC logo", "customer-type": null, "fileName": "ndc.png", "size": 3478, "sourceAssetId": "683b2380adeb535302a6e01e", "hostedUrl": "https://s3.amazonaws.com/webflow-prod-assets/663608d6085a91363816e0cb/683b2380adeb535302a6e01e_Client%20logos-1.png" },
+    { "name": "Onpoint Accounting", "slug": "onpoint-accounting", "alt-text": "Onpoint Accounting logo", "customer-type": "Accountancy practice", "fileName": "onpoint-accounting.png", "size": 9847, "sourceAssetId": "683b237f9266cccd397f4d65", "hostedUrl": "https://s3.amazonaws.com/webflow-prod-assets/663608d6085a91363816e0cb/683b237f9266cccd397f4d65_Client%20logos-7.png" },
+    { "name": "Oppic", "slug": "oppic", "alt-text": "Oppic logo", "customer-type": null, "fileName": "oppic.png", "size": 4294, "sourceAssetId": "683b2380aefa88509d9ad1fa", "hostedUrl": "https://s3.amazonaws.com/webflow-prod-assets/663608d6085a91363816e0cb/683b2380aefa88509d9ad1fa_Client%20logos-16.png" },
+    { "name": "Rixgreen", "slug": "rixgreen", "alt-text": "Rixgreen logo", "customer-type": null, "fileName": "rixgreen.png", "size": 6780, "sourceAssetId": "683b2380c46e25ede4c6c3ce", "hostedUrl": "https://s3.amazonaws.com/webflow-prod-assets/663608d6085a91363816e0cb/683b2380c46e25ede4c6c3ce_Client%20logos-15.png" },
+    { "name": "Stem Accountants", "slug": "stem-accountants", "alt-text": "Stem Accountants logo", "customer-type": "Accountancy practice", "fileName": "stem-accountants.png", "size": 2239, "sourceAssetId": "683b23803d46fbe8435a5031", "hostedUrl": "https://s3.amazonaws.com/webflow-prod-assets/663608d6085a91363816e0cb/683b23803d46fbe8435a5031_Client%20logos-10.png" },
+    { "name": "The Numbers Quarter", "slug": "the-numbers-quarter", "alt-text": "The Numbers Quarter logo", "customer-type": null, "fileName": "the-numbers-quarter.png", "size": 7366, "sourceAssetId": "683b2380aefa88509d9ad1ff", "hostedUrl": "https://s3.amazonaws.com/webflow-prod-assets/663608d6085a91363816e0cb/683b2380aefa88509d9ad1ff_Client%20logos-17.png" },
+    { "name": "The Proposers", "slug": "the-proposers", "alt-text": "The Proposers logo", "customer-type": null, "fileName": "the-proposers.png", "size": 6709, "sourceAssetId": "683b238051856406d6ce75b5", "hostedUrl": "https://s3.amazonaws.com/webflow-prod-assets/663608d6085a91363816e0cb/683b238051856406d6ce75b5_Client%20logos-12.png" }
+  ]
+}

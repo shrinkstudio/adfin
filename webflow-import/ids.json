@@ -1,0 +1,61 @@
+{
+  "siteId": "6a69cb89a361f85b63b37d60",
+  "collections": {
+    "blogs": "6a749f6d5b34148714602e69",
+    "authors": "6a74a059a867f090f34c7e67",
+    "blogTopics": "6a74a0f591dc4477391c450e",
+    "events": "6a74ab1e0f9d8a5183a5f044",
+    "audiences": "6a82d32f3addaf3982bdf141",
+    "changelogs": "6a82d3d78508decff6d68d58",
+    "openPositions": "6a82d3d9da72edfcad9a98df"
+  },
+  "authorItemsBySlug": {
+    "adfin-team": "6a82d1457b702cd7dd13437d",
+    "carlos-rey": "6a82d1457b702cd7dd13437f",
+    "chris-carty": "6a82d1457b702cd7dd134381",
+    "ciprian-diaconasu": "6a82d1457b702cd7dd134383",
+    "corey-haigney": "6a82d1457b702cd7dd134385",
+    "ema-damian": "6a82d1457b702cd7dd134387",
+    "emily-harris": "6a82d1457b702cd7dd134389",
+    "issy-bruce": "6a82d1457b702cd7dd13438b",
+    "nathan-hall": "6a82d1457b702cd7dd13438d",
+    "patrick-buhagiar": "6a82d168df0e078f1b9700c7",
+    "sam-jennings": "6a82d168df0e078f1b9700c9",
+    "sergiu-dinu": "6a82d168df0e078f1b9700cb",
+    "silviu-nedelciuc": "6a82d168df0e078f1b9700cd",
+    "stella-kaskaveli": "6a82d168df0e078f1b9700cf",
+    "tom-pope": "6a82d168df0e078f1b9700d1",
+    "co-founders": "6a82d168df0e078f1b9700d3",
+    "valentin-constanda": "6a82d168df0e078f1b9700d5",
+    "veronika-targos": "6a82d168df0e078f1b9700d7"
+  },
+  "blogTopicItemsBySlug": {
+    "business-growth": "6a74a26ab70182a3738a3911",
+    "product-tips": "6a74a2545e5f584c50bfc843",
+    "life-at-adfin": "6a82d114d4daf121d6d8a37d",
+    "success-stories": "6a82d114d4daf121d6d8a37f"
+  },
+  "audienceItemsBySlug": {
+    "accountant": "6a82d35546d996dd26550c0d",
+    "business": "6a82d35546d996dd26550c0f",
+    "lawyers": "6a82d35546d996dd26550c11",
+    "platforms": "6a82d35546d996dd26550c13"
+  },
+  "eventTypeOptions": {
+    "Tea Party": "898f14e373872cf0dcd4fc2c42116a8e",
+    "Webinar": "6b6376d1b192fa8a044f19771571a424",
+    "Roundtable": "332f6c0f5cbc283ceb96c52a1d8d36e8",
+    "Dinner": "a78c28fdd0851f70f9ae9200ab1422d6",
+    "Other": "0b3ebf96f6d26283907233a9570cdbe1"
+  },
+  "employmentTypeOptions": {
+    "Full Time": "ee422c54c5a17073b93ab0a20f37d810",
+    "Part Time": "76774aad7bc803c78fe2382419eff342",
+    "Contract": "edae185a9d04a4a347975e06a89c7714"
+  },
+  "workArrangementOptions": {
+    "In Office": "816d0210928c88297f6a5e64373b429f",
+    "Hybrid": "ffdae58b4edc025a60a1b6dd85815d9a",
+    "Remote": "cb46062e64539645a0ffb84c36ad3bae"
+  }
+}

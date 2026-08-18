@@ -1,0 +1,57 @@
+{
+ "gascoynes-accountancy": {
+  "client": "Gascoynes",
+  "card_title": "",
+  "intro": "Gascoynes replaced four disconnected payment methods and manual credit control with one platform, and changed the trajectory of its debtor book.",
+  "website": "https://gascoynes.co.uk",
+  "size": "5 offices · ~2,000 clients",
+  "region": "Norfolk & Suffolk",
+  "software": "QuickBooks",
+  "products": "Payment links, Direct debit, Customer agents, Quickbooks integration",
+  "body_len": 3737
+ },
+ "jumpstart": {
+  "client": "Jumpstart",
+  "card_title": "",
+  "intro": "Maria runs invoicing at Jumpstart on her own. Recruitment fees are large and land three months after the placement, so chasing them had become most of the job. Since using Adfin, invoice volume has quadrupled; the time she spends chasing has not.",
+  "website": "https://jumpstart-uk.com/",
+  "size": "Fast-growing startup",
+  "region": "UK",
+  "software": "QuickBooks",
+  "products": "Payment links, Customer agents, Quickbooks integration",
+  "body_len": 3602
+ },
+ "helpbox-uk": {
+  "client": "Helpbox",
+  "card_title": "",
+  "intro": "A fast-growing accountancy firm replaced four payment tools with one platform, automated its chasing, and got paid faster across thousands of clients.",
+  "website": "https://helpboxuk.com/",
+  "size": "~500 clients",
+  "region": "Hampshire",
+  "software": "Xero",
+  "products": "Payment links, Direct debit, Customer agents, Xero integration",
+  "body_len": 1512
+ },
+ "pillow-may": {
+  "client": "Pillow May",
+  "card_title": "",
+  "intro": "Pillow May wanted invoicing that stayed personal without the manual admin. Adfin sends customised reminders from their own domain, and gets 70% of their invoices paid within two working days.",
+  "website": "https://pillowmay.co.uk/",
+  "size": "~500 clients",
+  "region": "Wiltshire",
+  "software": "Xero",
+  "products": "Payment links, Direct debit, Customer agents, Xero integration",
+  "body_len": 2755
+ },
+ "nuvo-accountancy": {
+  "client": "Nuvo",
+  "card_title": "",
+  "intro": "Nuvo has grown rapidly over the last two years. Every firm it acquires arrives with its own challenges and its own way of getting paid. Adfin gives Nuvo one platform to bring every acquisition onto, migrating 2,500 direct debit mandates in its first rollout alone.",
+  "website": "https://nuvo.co.uk/",
+  "size": "21 offices, £30m revenue",
+  "region": "Derbyshire, UK-wide",
+  "software": "Xero",
+  "products": "Payment links, Direct debit, Digital payments, Xero integration",
+  "body_len": 4617
+ }
+}

@@ -26,3 +26,10 @@ typings/
 
 # Production files
 dist
+# Blog body images: 39MB of binaries already re-hosted into Webflow.
+# Reproducible from webflow-assets/blog-body-images/urls.json
+webflow-assets/blog-body-images/files/
+
+# Python bytecode
+__pycache__/
+*.pyc
