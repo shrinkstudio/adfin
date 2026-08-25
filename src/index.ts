@@ -1,7 +1,6 @@
-import { greetUser } from '$utils/greet';
+import { components } from './components';
 
 window.Webflow ||= [];
 window.Webflow.push(() => {
-  const name = 'John Doe';
-  greetUser(name);
+  components();
 });

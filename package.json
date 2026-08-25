@@ -58,6 +58,9 @@
   "engines": {
     "pnpm": ">=10"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild"]
+  },
   "publishConfig": {
     "provenance": true
   }
