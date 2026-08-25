@@ -10,3 +10,6 @@ dist
 src/PricingCalculator/fonts/*.woff2
 src/PricingCalculator/fonts/*.otf
 src/PricingCalculator/fonts.ts
+
+# local preview harness (esbuild)
+.preview
