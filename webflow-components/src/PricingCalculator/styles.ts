@@ -70,7 +70,7 @@ select.control.has-value { color: var(--field-text); }
 .check { display: flex; align-items: center; gap: 16px; cursor: pointer; }
 .check input {
   appearance: none; -webkit-appearance: none; width: 18px; height: 18px; margin: 0; flex: 0 0 18px;
-  border: 1px solid #fff; border-radius: 2px; background: transparent; cursor: pointer; position: relative;
+  border: 1px solid #fff; background: transparent; cursor: pointer; position: relative;
 }
 .calc.theme-light .check input { border-color: var(--green); }
 .check input:checked { background: #fff; }
@@ -109,7 +109,7 @@ select.control.has-value { color: var(--field-text); }
 .savings-row { align-items: center; }
 .savings-value { font-family: var(--font); font-weight: 500; font-size: clamp(40px, 8vw, 56px); line-height: 1; color: var(--green); letter-spacing: -0.02em; }
 
-.cta { display: inline-block; margin-top: 24px; background: var(--green); color: #fff; text-decoration: none; padding: 14px 24px; border-radius: 6px; font-size: 15px; font-weight: 500; }
+.cta { display: inline-block; margin-top: 24px; background: var(--green); color: #fff; text-decoration: none; padding: 14px 24px; font-size: 15px; font-weight: 500; }
 
 .warning { display: none; margin-top: 24px; padding: 20px 24px; background: #fff6e6; border: 1px solid #f0d9a8; color: #7a5a12; font-size: clamp(15px, 1.3vw, 16px); line-height: 1.45; }
 .warning.show { display: block; }

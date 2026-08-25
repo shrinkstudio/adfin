@@ -39,7 +39,7 @@ export function BookDemoForm(props: BookDemoFormProps) {
     heading = 'Book a quick call with the team',
     subheading = '',
     nextLabel = 'Continue',
-    submitLabel = 'See available times',
+    submitLabel = 'Book a demo',
     successHeading = "You're all set",
     successMessage = 'Pick a time that works for you in the scheduler.',
   } = props;

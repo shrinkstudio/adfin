@@ -19,7 +19,7 @@ export default declareComponent(BookDemoForm, {
     heading: props.Text({ name: 'Heading', defaultValue: 'Book a quick call with the team' }),
     subheading: props.Text({ name: 'Subheading', defaultValue: '' }),
     nextLabel: props.Text({ name: 'Next button label', defaultValue: 'Continue' }),
-    submitLabel: props.Text({ name: 'Submit button label', defaultValue: 'See available times' }),
+    submitLabel: props.Text({ name: 'Submit button label', defaultValue: 'Book a demo' }),
     successHeading: props.Text({ name: 'Success heading', defaultValue: "You're all set" }),
     successMessage: props.Text({ name: 'Success message', defaultValue: 'Pick a time that works for you in the scheduler.' }),
   },
