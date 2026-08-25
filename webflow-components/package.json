@@ -1,0 +1,26 @@
+{
+  "name": "adfin-webflow-components",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Adfin — Webflow Code Components (React, published via DevLink).",
+  "type": "module",
+  "scripts": {
+    "import": "webflow devlink import",
+    "bundle": "webflow devlink bundle",
+    "embed-fonts": "node scripts/embed-fonts.mjs",
+    "check": "tsc --noEmit",
+    "test": "node --experimental-strip-types tests/calc.test.ts"
+  },
+  "devDependencies": {
+    "@webflow/data-types": "latest",
+    "@webflow/react": "latest",
+    "@webflow/webflow-cli": "latest",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}

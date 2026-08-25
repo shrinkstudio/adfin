@@ -1,0 +1,10 @@
+{
+  "library": {
+    "name": "Adfin Tools",
+    "components": [
+      "./src/**/*.webflow.@(ts|tsx|js|jsx)"
+    ],
+    "description": "Tools & code components designed for Adfin (including but not limited to Youtube Sync, Pricing calculator)",
+    "id": "adfin-tools"
+  }
+}

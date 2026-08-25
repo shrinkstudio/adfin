@@ -1,0 +1,12 @@
+node_modules
+dist
+.webflow
+.env
+.env.*
+*.log
+
+# Commercial fonts (Klim / Söhne) — licensed for the site, not for public
+# redistribution. Kept local; regenerate fonts.ts with `npm run embed-fonts`.
+src/PricingCalculator/fonts/*.woff2
+src/PricingCalculator/fonts/*.otf
+src/PricingCalculator/fonts.ts
