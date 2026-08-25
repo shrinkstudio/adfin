@@ -55,6 +55,7 @@
   "dependencies": {
     "@finsweet/ts-utils": "^0.40.0"
   },
+  "packageManager": "pnpm@10.12.1",
   "engines": {
     "pnpm": ">=10"
   },
