@@ -17,3 +17,15 @@ of truth is `src/components/transition.ts` on this branch.
 - `data-transition="leading|trailing"` picks reveal/cover.
 - `data-transition-range` (on the wrap) tunes how much viewport the scrub spans.
 - Reduced motion / no JS falls back to the static checker.
+
+## A/B comparison (2026-08-27)
+
+`compare.html` shows both directions side by side, each with Lenis smooth scroll:
+
+- **A — Figma checker**: the sparse decorative boundary (15/36 cells transparent).
+- **B — Solid wall (CHOSEN)**: fully filled band, Osmo-style — the green dissolves
+  to reveal the section beneath. Two solid green rows + the Figma accent rows.
+
+Tuning: `data-transition-range` on the wrap (A=0.65, B=0.75). Higher = the
+dissolve keeps resolving until the band is higher in the viewport.
+Reverse direction = `data-transition="trailing"` (wall assembles instead).

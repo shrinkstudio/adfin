@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A — figma checker</title>
+<style>
+  :root{
+    --green:#084235;   /* sampled from the Figma, not approximated */
+    --cream:#f6f5f0;
+  }
+  *{margin:0;box-sizing:border-box}
+  body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;background:#fff}
+
+  /* ===== figma page flow: Hero -> Hero Video -> Transition -> Heading ===== */
+  .section-hero{background:var(--green);color:var(--cream);min-height:88vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:22px}
+  .section-hero h1{font-family:Georgia,serif;font-weight:400;font-size:clamp(48px,7vw,96px)}
+  .section-hero p{opacity:.85}
+
+  .section-video{background:var(--green);padding:0 6vw 0;position:relative}
+  .app-card{background:#fff;border-radius:6px;min-height:78vh;box-shadow:0 30px 80px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;color:#8a8a84;font-size:15px;position:relative;z-index:1}
+  /* the video section keeps green below the card, where the band begins */
+  .section-video::after{content:"";display:block;height:18vh}
+
+  .section-white{background:#fff;color:#1c1c1c;min-height:120vh;display:flex;align-items:flex-start;justify-content:center;padding-top:24vh;position:relative}
+  .section-white .intro{position:relative;z-index:1;max-width:680px;text-align:center;font-size:clamp(20px,2.4vw,28px);line-height:1.5;color:#123f31}
+  .section-white .intro a{color:inherit}
+  .footer-spacer{height:80vh;background:var(--green)}
+
+  /* ===== Greg's transition band, figma-exact ===== */
+  .frame_outer.is-transition{
+    position:relative;
+    z-index:2;
+    pointer-events:none;
+  }
+  .frame_outer.is-transition[data-transition="leading"]{
+    position:absolute;
+    left:0;right:0;top:0;
+  }
+  .frame_transition_wrap{
+    display:grid;
+    grid-template-columns:repeat(12,1fr);
+    width:100%;
+  }
+  .frame_transition_block{
+    /* 1436/12 x 146/3 in the figma = 119.7 x 48.7 */
+    aspect-ratio:2.459;
+    width:100%;
+  }
+</style>
+</head>
+<body>
+
+<section class="section-hero">
+  <h1>Just get paid.</h1>
+  <p>Hero &mdash; tagline, dashes and CTAs live here.</p>
+</section>
+
+<section class="section-video">
+  <div class="app-card">Hero Video / UI snippet (Greg's)</div>
+</section>
+
+<section class="section-white">
+  <div class="frame_outer is-transition" data-transition="leading">
+    <div class="frame_transition_wrap u-grid-custom" data-transition="leading" data-transition-range="0.65">
+      <div class="frame_transition_block"></div><div class="frame_transition_block" style="background:#98a3a1"></div><div class="frame_transition_block" style="background:#98a3a1"></div><div class="frame_transition_block" style="background:#084235"></div><div class="frame_transition_block" style="background:#e4e4e4"></div><div class="frame_transition_block" style="background:#084235"></div><div class="frame_transition_block" style="background:#084235"></div><div class="frame_transition_block"></div><div class="frame_transition_block" style="background:#084235"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div>
+      <div class="frame_transition_block" style="background:#084235"></div><div class="frame_transition_block" style="background:#627f78"></div><div class="frame_transition_block" style="background:#627f78"></div><div class="frame_transition_block"></div><div class="frame_transition_block" style="background:#084235"></div><div class="frame_transition_block" style="background:#084235"></div><div class="frame_transition_block" style="background:#084235"></div><div class="frame_transition_block"></div><div class="frame_transition_block" style="background:#627f78"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block" style="background:#084235"></div>
+      <div class="frame_transition_block" style="background:#869894"></div><div class="frame_transition_block" style="background:#084235"></div><div class="frame_transition_block" style="background:#084235"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block" style="background:#8f9d9a"></div><div class="frame_transition_block"></div><div class="frame_transition_block" style="background:#084235"></div><div class="frame_transition_block" style="background:#084235"></div><div class="frame_transition_block"></div>
+    </div>
+  </div>
+
+  <p class="intro">To get paid on time, your business needs two things. A reliable way to collect money: <a href="#">a payments platform</a>. And an effective process for overseeing it: <a href="#">credit control</a>.</p>
+</section>
+
+<div class="footer-spacer"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
+<script>var lenis=new Lenis();function raf(t){lenis.raf(t);requestAnimationFrame(raf)}requestAnimationFrame(raf);</script>
+<script src="transition.js"></script>
+</body>
+</html>
