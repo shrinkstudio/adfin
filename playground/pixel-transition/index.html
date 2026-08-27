@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adfin transition test</title>
+<style>
+  :root{
+    --green:#09372a;
+    --sage:#8fa89b;
+    --pale:#cdd9d2;
+    --cream:#f6f5f0;
+  }
+  *{margin:0;box-sizing:border-box}
+  body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;background:#fff}
+
+  /* ===== staging-equivalent structure ===== */
+  .section-dark{background:var(--green);color:var(--cream);min-height:130vh;position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px}
+  .section-dark h1{font-family:Georgia,serif;font-weight:400;font-size:clamp(48px,7vw,96px)}
+  .section-dark p{opacity:.85}
+  .section-white{background:#fff;color:#1c1c1c;min-height:120vh;display:flex;align-items:flex-start;justify-content:center;padding-top:26vh;position:relative}
+  .section-white .intro{max-width:640px;text-align:center;font-size:clamp(20px,2.4vw,28px);line-height:1.5;color:#123f31}
+  .section-white .intro a{color:inherit}
+  .footer-spacer{height:80vh;background:var(--green)}
+
+  /* ===== Greg's transition band (as in Framed Section 2) ===== */
+  .frame_outer.is-transition{
+    position:relative;
+    z-index:2;
+    pointer-events:none;
+  }
+  /* leading band: the hero's green hangs over the top of the white section
+     and dissolves upward as you scroll in */
+  .frame_outer.is-transition[data-transition="leading"]{
+    position:absolute;
+    left:0;right:0;top:0;
+  }
+  .frame_transition_wrap{
+    display:grid;
+    grid-template-columns:repeat(12,1fr);
+    width:100%;
+  }
+  .frame_transition_block{
+    aspect-ratio:2.5/1;
+    width:100%;
+  }
+  /* green-weighted mix: the hero palette bleeding down, white showing through gaps */
+  .frame_transition_block{background:var(--green)}
+  .frame_transition_block:nth-child(4n+2){background:var(--sage)}
+  .frame_transition_block:nth-child(6n+4){background:var(--pale)}
+  .frame_transition_block:nth-child(5n+3){background:transparent}
+  .frame_transition_block:nth-child(9n+7){background:transparent}
+</style>
+</head>
+<body>
+
+<section class="section-dark">
+  <h1>Just get paid.</h1>
+  <p>Scroll down through the transition.</p>
+</section>
+
+<section class="section-white">
+  <div class="frame_outer is-transition" data-transition="leading">
+    <div class="frame_transition_wrap u-grid-custom" data-transition="leading" data-transition-range="0.35">
+      <div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div>
+      <div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div>
+      <div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div><div class="frame_transition_block"></div>
+    </div>
+  </div>
+
+  <p class="intro">To get paid on time, your business needs two things. A reliable way to collect money: <a href="#">a payments platform</a>. And an effective process for overseeing it: <a href="#">credit control</a>.</p>
+</section>
+
+<div class="footer-spacer"></div>
+
+<script src="transition.js"></script>
+</body>
+</html>
