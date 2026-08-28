@@ -1,11 +1,13 @@
 import { anchorLinks } from './anchorLinks';
-import { productTab } from './productTab';
+import { duoTab } from './duoTab';
+import { progressTab } from './progressTab';
 import { toc } from './toc';
 import { wheel } from './wheel';
 
 export const components = (): void => {
   anchorLinks();
-  productTab();
+  duoTab();
+  progressTab();
   toc();
   wheel();
 };

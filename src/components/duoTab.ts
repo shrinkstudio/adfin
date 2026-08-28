@@ -7,24 +7,24 @@ import { queryElements } from '$utils/queryElements';
 import { isStacked } from '$utils/responsive';
 
 /** The grid wrapper; buttons and visuals are interleaved children, paired by index. */
-const PRODUCT_TAB = attributeSelector('component', 'product-tab');
-const PRODUCT_TAB_BUTTON = attributeSelector('component', 'product-tab-button');
-const PRODUCT_TAB_VISUAL = attributeSelector('component', 'product-tab-visual');
+const DUO_TAB = attributeSelector('component', 'duo-tab');
+const DUO_TAB_BUTTON = attributeSelector('duo-tab', 'button');
+const DUO_TAB_VISUAL = attributeSelector('duo-tab', 'visual');
 
 const ACTIVE_CLASS = 'is-active';
 
-const log = createLogger('product-tab');
+const log = createLogger('duo-tab');
 
 /**
  * Hovering (or focusing) a button or visual activates the button *and* visual
  * that share its index. Only runs while Lumos is unstacked (`--_responsive---stack`
  * is 0) — on mobile the tabs stack and there's no hover to drive.
  */
-const createProductTab = (component: HTMLElement): Destroyable => {
+const createDuoTab = (component: HTMLElement): Destroyable => {
   const cleanup = createCleanup();
 
-  const buttons = queryElements<HTMLElement>(PRODUCT_TAB_BUTTON, component);
-  const visuals = queryElements<HTMLElement>(PRODUCT_TAB_VISUAL, component);
+  const buttons = queryElements<HTMLElement>(DUO_TAB_BUTTON, component);
+  const visuals = queryElements<HTMLElement>(DUO_TAB_VISUAL, component);
   const count = Math.min(buttons.length, visuals.length);
 
   log(`init: ${buttons.length} button(s), ${visuals.length} visual(s)`);
@@ -70,9 +70,9 @@ const createProductTab = (component: HTMLElement): Destroyable => {
 };
 
 /**
- * Initialises every product-tab grid on the page (one instance each).
+ * Initialises every duo-tab grid on the page (one instance each).
  */
-export const productTab = (): void => {
-  const instances = createInstances(PRODUCT_TAB, createProductTab);
-  log(`found ${instances.length} "${PRODUCT_TAB}" on page`);
+export const duoTab = (): void => {
+  const instances = createInstances(DUO_TAB, createDuoTab);
+  log(`found ${instances.length} "${DUO_TAB}" on page`);
 };

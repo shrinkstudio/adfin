@@ -9,9 +9,9 @@ import { queryElements } from '$utils/queryElements';
 
 /** The wrapper Webflow renders; individual in-page links live inside it. */
 const ANCHOR_LINKS = attributeSelector('component', 'anchor-links');
-const ANCHOR_LINK = attributeSelector('component', 'anchor-link');
+const ANCHOR_LINK = attributeSelector('anchor-links', 'link');
 /** The single moving border element that slides to the active link. */
-const ANCHOR_BORDER = attributeSelector('component', 'anchor-border');
+const ANCHOR_BORDER = attributeSelector('anchor-links', 'border');
 
 /** Opt-in on the wrapper: strip the #hash from the URL after a click. */
 const HIDE_HASH_ATTRIBUTE = 'anchor-links-hide-hash';
@@ -195,6 +195,38 @@ const createAnchorLinks = (wrapper: HTMLElement): Destroyable => {
     handleStripScroll();
   };
 
+  // Loading a URL with a #hash should land on that section, but the browser's
+  // native jump fires before we run (this whole component inits inside
+  // Webflow.push, after layout has shifted) and Webflow can reset the scroll
+  // after us. If the hash points at one of our sections, jump to it ourselves —
+  // instantly (no smooth slide from the top on load), honouring scroll-margin-top,
+  // and repeatedly across the load lifecycle so we win against those resets and
+  // land on the final, image/font-settled layout.
+  const scrollToInitialHash = (): void => {
+    const id = window.location.hash.slice(1);
+    log(`initial hash: ${id ? `#${id}` : '(none)'}`);
+    if (!id) return;
+
+    const target = items.find((item) => item.section.id === id)?.section;
+    if (!target) {
+      log(`#${id} is not one of our ${items.length} section(s) — leaving scroll alone`);
+      return;
+    }
+
+    const jump = (label: string): void => {
+      target.scrollIntoView({ behavior: 'instant' as ScrollBehavior, block: 'start' });
+      log(`scrolled to #${id} (${label})`);
+    };
+
+    // Now, next frame (after Webflow's push queue drains), and once the page has
+    // fully loaded (images/fonts done → final layout). Each pass re-asserts the
+    // position in case Webflow scrolled back to the top in between.
+    jump('init');
+    requestAnimationFrame(() => jump('raf'));
+    if (document.readyState === 'complete') jump('complete');
+    else cleanup.add(on(window, 'load', () => jump('load')));
+  };
+
   if (items.length) {
     cleanup.add(on(window, 'scroll', requestUpdate, { passive: true }));
     cleanup.add(on(window, 'resize', handleResize));
@@ -208,6 +240,8 @@ const createAnchorLinks = (wrapper: HTMLElement): Destroyable => {
     border?.classList.add(SCROLLING_CLASS);
     update();
     endScrolling();
+
+    scrollToInitialHash();
   }
 
   return {

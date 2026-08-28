@@ -7,8 +7,8 @@ import { createLogger } from '$utils/log';
 import { queryElements } from '$utils/queryElements';
 
 const WHEEL = attributeSelector('component', 'wheel');
-const WHEEL_CIRCLE = attributeSelector('component', 'wheel-circle');
-const WHEEL_ITEM = attributeSelector('component', 'wheel-item');
+const WHEEL_CIRCLE = attributeSelector('wheel', 'circle');
+const WHEEL_ITEM = attributeSelector('wheel', 'item');
 
 /** One full run of the progress driver (0 → 1) in time mode. */
 const LOOP_MS = 20_000;
