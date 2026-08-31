@@ -2,6 +2,8 @@ import { anchorLinks } from './anchorLinks';
 import { duoTab } from './duoTab';
 import { progressTab } from './progressTab';
 import { toc } from './toc';
+import { transition } from './transition';
+import { uiScreenshot } from './uiScreenshot';
 import { wheel } from './wheel';
 
 export const components = (): void => {
@@ -9,5 +11,7 @@ export const components = (): void => {
   duoTab();
   progressTab();
   toc();
+  transition();
+  uiScreenshot();
   wheel();
 };
