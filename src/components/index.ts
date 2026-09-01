@@ -1,3 +1,4 @@
+import { anchorId } from './anchorId';
 import { anchorLinks } from './anchorLinks';
 import { duoTab } from './duoTab';
 import { progressTab } from './progressTab';
@@ -7,6 +8,7 @@ import { uiScreenshot } from './uiScreenshot';
 import { wheel } from './wheel';
 
 export const components = (): void => {
+  anchorId();
   anchorLinks();
   duoTab();
   progressTab();
