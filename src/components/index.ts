@@ -3,6 +3,7 @@ import { anchorLinks } from './anchorLinks';
 import { customerLogos } from './customerLogos';
 import { duoTab } from './duoTab';
 import { progressTab } from './progressTab';
+import { rotatingTitle } from './rotatingTitle';
 import { toc } from './toc';
 import { transition } from './transition';
 import { uiScreenshot } from './uiScreenshot';
@@ -14,6 +15,7 @@ export const components = (): void => {
   customerLogos();
   duoTab();
   progressTab();
+  rotatingTitle();
   toc();
   transition();
   uiScreenshot();

@@ -1,0 +1,215 @@
+@scope (.wf-devlink-c76951a089aded6c3afa88a97465a25e) {
+  body {
+    background-color: var(--_theme---background);
+    font-family: var(--_text-style---font-family);
+    color: var(--_theme---text);
+    font-size: var(--_text-style---font-size);
+    line-height: var(--_text-style---line-height);
+    font-weight: var(--_text-style---font-weight);
+    letter-spacing: var(--_text-style---letter-spacing);
+    text-transform: var(--_text-style---text-transform, none);
+  }
+  h1 {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-family: var(--_text-style---font-family);
+    font-size: var(--_text-style---font-size);
+    line-height: var(--_text-style---line-height);
+    font-weight: var(--_text-style---font-weight);
+    letter-spacing: var(--_text-style---letter-spacing);
+    --_text-style---font-family: var(--_typography---font--primary-family);
+    --_text-style---font-size: var(--_typography---font-size--h1);
+    --_text-style---line-height: var(--_typography---line-height--small);
+    --_text-style---font-weight: var(--_typography---font--font-regular);
+    --_text-style---letter-spacing: var(--_typography---letter-spacing--tight);
+    --_text-style---text-wrap: balance;
+    --_text-style---margin-bottom: var(--_spacing---space--5);
+    --_text-style---margin-top: var(--_spacing---space--5);
+    --_text-style---trim-top: var(--_typography---font--primary-trim-top);
+    --_text-style---trim-bottom: var(--_typography---font--primary-trim-bottom);
+    --_text-style---text-transform: var(--_typography---text-transform--none);
+    display: flow-root;
+    text-transform: var(--_text-style---text-transform, none);
+    text-wrap: var(--_text-style---text-wrap);
+  }
+  h2 {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-family: var(--_text-style---font-family);
+    font-size: var(--_text-style---font-size);
+    line-height: var(--_text-style---line-height);
+    font-weight: var(--_text-style---font-weight);
+    letter-spacing: var(--_text-style---letter-spacing);
+    --_text-style---font-family: var(--_typography---font--secondary-family);
+    --_text-style---font-size: var(--_typography---font-size--h2);
+    --_text-style---line-height: var(--_typography---line-height--medium);
+    --_text-style---font-weight: var(--_typography---font--font-regular);
+    --_text-style---letter-spacing: var(--_typography---letter-spacing--tight);
+    --_text-style---text-wrap: balance;
+    --_text-style---margin-bottom: var(--_spacing---space--5);
+    --_text-style---margin-top: var(--_spacing---space--5);
+    --_text-style---trim-top: var(--_typography---font--secondary-trim-top);
+    --_text-style---trim-bottom: var(
+      --_typography---font--secondary-trim-bottom
+    );
+    --_text-style---text-transform: var(--_typography---text-transform--none);
+    display: flow-root;
+    text-wrap: var(--_text-style---text-wrap);
+    text-transform: var(--_text-style---text-transform, none);
+  }
+  h3 {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-family: var(--_text-style---font-family);
+    font-size: var(--_text-style---font-size);
+    line-height: var(--_text-style---line-height);
+    font-weight: var(--_text-style---font-weight);
+    letter-spacing: var(--_text-style---letter-spacing);
+    --_text-style---font-family: var(--_typography---font--secondary-family);
+    --_text-style---font-size: var(--_typography---font-size--h3);
+    --_text-style---line-height: var(--_typography---line-height--medium);
+    --_text-style---font-weight: var(--_typography---font--font-regular);
+    --_text-style---letter-spacing: var(--_typography---letter-spacing--close);
+    --_text-style---text-wrap: balance;
+    --_text-style---margin-bottom: var(--_spacing---space--4);
+    --_text-style---margin-top: var(--_spacing---space--4);
+    --_text-style---trim-top: var(--_typography---font--secondary-trim-top);
+    --_text-style---trim-bottom: var(
+      --_typography---font--secondary-trim-bottom
+    );
+    --_text-style---text-transform: var(--_typography---text-transform--none);
+    display: flow-root;
+    text-transform: var(--_text-style---text-transform, none);
+    text-wrap: var(--_text-style---text-wrap);
+  }
+  h4 {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-family: var(--_text-style---font-family);
+    font-size: var(--_text-style---font-size);
+    line-height: var(--_text-style---line-height);
+    font-weight: var(--_text-style---font-weight);
+    letter-spacing: var(--_text-style---letter-spacing);
+    --_text-style---font-family: var(--_typography---font--secondary-family);
+    --_text-style---font-size: var(--_typography---font-size--h4);
+    --_text-style---line-height: var(--_typography---line-height--medium);
+    --_text-style---font-weight: var(--_typography---font--font-regular);
+    --_text-style---letter-spacing: var(--_typography---letter-spacing--close);
+    --_text-style---text-wrap: pretty;
+    --_text-style---margin-bottom: var(--_spacing---space--4);
+    --_text-style---margin-top: var(--_spacing---space--4);
+    --_text-style---trim-top: var(--_typography---font--secondary-trim-top);
+    --_text-style---trim-bottom: var(
+      --_typography---font--secondary-trim-bottom
+    );
+    --_text-style---text-transform: var(--_typography---text-transform--none);
+    display: flow-root;
+    text-transform: var(--_text-style---text-transform, none);
+    text-wrap: var(--_text-style---text-wrap);
+  }
+  h5 {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-family: var(--_text-style---font-family);
+    font-size: var(--_text-style---font-size);
+    line-height: var(--_text-style---line-height);
+    font-weight: var(--_text-style---font-weight);
+    letter-spacing: var(--_text-style---letter-spacing);
+    --_text-style---font-family: var(--_typography---font--secondary-family);
+    --_text-style---font-size: var(--_typography---font-size--h5);
+    --_text-style---line-height: var(--_typography---line-height--large);
+    --_text-style---font-weight: var(--_typography---font--font-regular);
+    --_text-style---letter-spacing: var(--_typography---letter-spacing--close);
+    --_text-style---text-wrap: pretty;
+    --_text-style---margin-bottom: var(--_spacing---space--4);
+    --_text-style---margin-top: var(--_spacing---space--4);
+    --_text-style---trim-top: var(--_typography---font--secondary-trim-top);
+    --_text-style---trim-bottom: var(
+      --_typography---font--secondary-trim-bottom
+    );
+    --_text-style---text-transform: var(--_typography---text-transform--none);
+    display: flow-root;
+    text-transform: var(--_text-style---text-transform, none);
+    text-wrap: var(--_text-style---text-wrap);
+  }
+  h6 {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-family: var(--_text-style---font-family);
+    font-size: var(--_text-style---font-size);
+    line-height: var(--_text-style---line-height);
+    font-weight: var(--_text-style---font-weight);
+    letter-spacing: var(--_text-style---letter-spacing);
+    --_text-style---font-family: var(--_typography---font--secondary-family);
+    --_text-style---font-size: var(--_typography---font-size--h6);
+    --_text-style---line-height: var(--_typography---line-height--large);
+    --_text-style---font-weight: var(--_typography---font--font-regular);
+    --_text-style---letter-spacing: var(--_typography---letter-spacing--normal);
+    --_text-style---text-wrap: pretty;
+    --_text-style---margin-bottom: var(--_spacing---space--3);
+    --_text-style---margin-top: var(--_spacing---space--4);
+    --_text-style---trim-top: var(--_typography---font--secondary-trim-top);
+    --_text-style---trim-bottom: var(
+      --_typography---font--secondary-trim-bottom
+    );
+    --_text-style---text-transform: var(--_typography---text-transform--none);
+    display: flow-root;
+    text-transform: var(--_text-style---text-transform, none);
+    text-wrap: var(--_text-style---text-wrap);
+  }
+  p {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    display: flow-root;
+    font-family: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+  }
+  a {
+    text-decoration: none;
+    color: inherit;
+    outline-width: var(--focus--width);
+    outline-offset: var(--focus--offset-outer);
+  }
+  ul {
+    margin-bottom: 0px;
+    padding-left: 0px;
+    list-style: "";
+  }
+  ol {
+    margin-bottom: 0px;
+    padding-left: 0px;
+    list-style: "";
+  }
+  li {
+    display: block;
+  }
+  img {
+    width: 100%;
+    max-width: 100%;
+    object-fit: cover;
+    user-select: none;
+  }
+  strong {
+    font-weight: bold;
+  }
+  blockquote {
+    margin-bottom: 0px;
+    padding-top: 0px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    border-top-style: none;
+    border-right-style: none;
+    border-bottom-style: none;
+    border-left-style: none;
+    font-size: inherit;
+    line-height: inherit;
+  }
+  figure {
+    margin-bottom: 0px;
+  }
+}

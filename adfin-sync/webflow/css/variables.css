@@ -1,0 +1,877 @@
+:root {
+  --_theme---background: var(--swatch--light);
+  --_text-style---font-family: var(--_typography---font--secondary-family);
+  --_theme---text: var(--swatch--dark);
+  --_text-style---font-size: var(--_typography---font-size--text-main);
+  --_text-style---line-height: var(--_typography---line-height--large);
+  --_text-style---font-weight: var(--_typography---font--font-regular);
+  --_text-style---letter-spacing: var(--_typography---letter-spacing--normal);
+  --_text-style---text-wrap: pretty;
+  --_gap---size: var(--site--gutter);
+  --radius--main: 1rem;
+  --_theme---background-2: var(--swatch--neutral-light);
+  --site--gutter: clamp(
+    1 * 1rem,
+    (
+      (
+          1 -
+            (
+              (1 - 1) / (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        ((1 - 1) / (var(--site--viewport-max) - var(--site--viewport-min))) *
+        100vw
+    ),
+    1 * 1rem
+  );
+  --_theme---text-faded\<deleted\|variable-7b07ac88-d28a-5c0a-7534-a6752a88d588\>: color-mix(
+    in srgb,
+    var(--_theme---text),
+    var(--_theme---background) 40%
+  );
+  --_spacing---space--5: clamp(
+    1.5 * 1rem,
+    (
+      (
+          1.5 -
+            (
+              (2 - 1.5) /
+                (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        ((2 - 1.5) / (var(--site--viewport-max) - var(--site--viewport-min))) *
+        100vw
+    ),
+    2 * 1rem
+  );
+  --site--column-count: 12;
+  --site--column-width: calc(
+    (
+        min(var(--max-width--main), 100% - var(--site--margin) * 2) -
+          (var(--site--gutter) * (var(--site--column-count) - 1))
+      ) / var(--site--column-count)
+  );
+  --_responsive---large: 1;
+  --_responsive---medium: 0;
+  --_responsive---small: 0;
+  --_responsive---xsmall: 0;
+  --_spacing---space--6: clamp(
+    1.75 * 1rem,
+    (
+      (
+          1.75 -
+            (
+              (2.5 - 1.75) /
+                (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        ((2.5 - 1.75) / (var(--site--viewport-max) - var(--site--viewport-min))) *
+        100vw
+    ),
+    2.5 * 1rem
+  );
+  --_spacing---section-space--main: clamp(
+    4 * 1rem,
+    (
+      (
+          4 -
+            (
+              (7 - 4) / (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        ((7 - 4) / (var(--site--viewport-max) - var(--site--viewport-min))) *
+        100vw
+    ),
+    7 * 1rem
+  );
+  --max-width--small: 50rem;
+  --site--margin: clamp(
+    1 * 1rem,
+    (
+      (
+          1 -
+            (
+              (4 - 1) / (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        ((4 - 1) / (var(--site--viewport-max) - var(--site--viewport-min))) *
+        100vw
+    ),
+    4 * 1rem
+  );
+  --_column-count---value: 1;
+  --_theme---background-skeleton: var(--swatch--neutral-light);
+  --nav--height-total: calc(
+    var(--nav--height) * var(--nav--has-nav) + var(--nav--banner-height) *
+      var(--nav--has-banner)
+  );
+  --_spacing---space--7: clamp(
+    2.25 * 1rem,
+    (
+      (
+          2.25 -
+            (
+              (3 - 2.25) /
+                (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        ((3 - 2.25) / (var(--site--viewport-max) - var(--site--viewport-min))) *
+        100vw
+    ),
+    3 * 1rem
+  );
+  --_spacing---space--3: clamp(
+    1 * 1rem,
+    (
+      (
+          1 -
+            (
+              (1 - 1) / (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        ((1 - 1) / (var(--site--viewport-max) - var(--site--viewport-min))) *
+        100vw
+    ),
+    1 * 1rem
+  );
+  --_theme---accent: var(--swatch--accent1);
+  --_spacing---space--8: clamp(
+    2.5 * 1rem,
+    (
+      (
+          2.5 -
+            (
+              (4 - 2.5) /
+                (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        ((4 - 2.5) / (var(--site--viewport-max) - var(--site--viewport-min))) *
+        100vw
+    ),
+    4 * 1rem
+  );
+  --_text-style---margin-bottom: var(--_spacing---space--4);
+  --_spacing---space--2: clamp(
+    0.75 * 1rem,
+    (
+      (
+          0.75 -
+            (
+              (0.75 - 0.75) /
+                (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        (
+          (0.75 - 0.75) /
+            (var(--site--viewport-max) - var(--site--viewport-min))
+        ) * 100vw
+    ),
+    0.75 * 1rem
+  );
+  --helpers--scroll-margin-top: -1px;
+  --max-width--main: calc(var(--site--viewport-max) * 1rem);
+  --_responsive---inverse-stack: var(--_responsive---large);
+  --icon-size--small: clamp(
+    0.75 * 1rem,
+    (
+      (
+          0.75 -
+            (
+              (0.75 - 0.75) /
+                (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        (
+          (0.75 - 0.75) /
+            (var(--site--viewport-max) - var(--site--viewport-min))
+        ) * 100vw
+    ),
+    0.75 * 1rem
+  );
+  --icon-size--medium: clamp(
+    1 * 1rem,
+    (
+      (
+          1 -
+            (
+              (1.125 - 1) /
+                (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        ((1.125 - 1) / (var(--site--viewport-max) - var(--site--viewport-min))) *
+        100vw
+    ),
+    1.125 * 1rem
+  );
+  --icon-size--large: clamp(
+    1.25 * 1rem,
+    (
+      (
+          1.25 -
+            (
+              (1.5 - 1.25) /
+                (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        ((1.5 - 1.25) / (var(--site--viewport-max) - var(--site--viewport-min))) *
+        100vw
+    ),
+    1.5 * 1rem
+  );
+  --_text-style---margin-top: var(--_spacing---space--4);
+  --_typography---font-size--h4: clamp(
+    1.5 * 1rem,
+    (
+      (
+          1.5 -
+            (
+              (2 - 1.5) /
+                (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        ((2 - 1.5) / (var(--site--viewport-max) - var(--site--viewport-min))) *
+        100vw
+    ),
+    2 * 1rem
+  );
+  --_typography---font-size--h5: clamp(
+    1.375 * 1rem,
+    (
+      (
+          1.375 -
+            (
+              (1.5 - 1.375) /
+                (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        (
+          (1.5 - 1.375) /
+            (var(--site--viewport-max) - var(--site--viewport-min))
+        ) * 100vw
+    ),
+    1.5 * 1rem
+  );
+  --_typography---font-size--h6: clamp(
+    1.25 * 1rem,
+    (
+      (
+          1.25 -
+            (
+              (1.25 - 1.25) /
+                (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        (
+          (1.25 - 1.25) /
+            (var(--site--viewport-max) - var(--site--viewport-min))
+        ) * 100vw
+    ),
+    1.25 * 1rem
+  );
+  --_typography---font-size--text-small\<deleted\|variable-b12a3506-6b50-ad7d-8256-871a5e5febab\>: clamp(
+    0.875 * 1rem,
+    (
+      (
+          0.875 -
+            (
+              (1 - 0.875) /
+                (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        ((1 - 0.875) / (var(--site--viewport-max) - var(--site--viewport-min))) *
+        100vw
+    ),
+    1 * 1rem
+  );
+  --_typography---font-size--text-xsmall: clamp(
+    0.75 * 1rem,
+    (
+      (
+          0.75 -
+            (
+              (0.75 - 0.75) /
+                (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        (
+          (0.75 - 0.75) /
+            (var(--site--viewport-max) - var(--site--viewport-min))
+        ) * 100vw
+    ),
+    0.75 * 1rem
+  );
+  --swatch--accent1: #b3b3ff;
+  --swatch--accent1-10: color-mix(
+    in srgb,
+    var(--swatch--accent1),
+    var(--swatch--light) 90%
+  );
+  --_typography---font-size--text-small: clamp(
+    1 * 1rem,
+    (
+      (
+          1 -
+            (
+              (1 - 1) / (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        ((1 - 1) / (var(--site--viewport-max) - var(--site--viewport-min))) *
+        100vw
+    ),
+    1 * 1rem
+  );
+  --_text-style---trim-top: var(--_typography---font--secondary-trim-top);
+  --_text-style---trim-bottom: var(--_typography---font--secondary-trim-bottom);
+  --_spacing---space--4: clamp(
+    1.25 * 1rem,
+    (
+      (
+          1.25 -
+            (
+              (1.5 - 1.25) /
+                (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        ((1.5 - 1.25) / (var(--site--viewport-max) - var(--site--viewport-min))) *
+        100vw
+    ),
+    1.5 * 1rem
+  );
+  --_typography---font--secondary-family: "Söhne", Arial, sans-serif;
+  --_typography---font--font-medium: 500;
+  --_typography---font--font-semibold: 600;
+  --_typography---line-height--small: 1;
+  --_trigger---on: 1;
+  --_trigger---off: 0;
+  --radius--round: 100vw;
+  --_spacing---space--1: clamp(
+    0.5 * 1rem,
+    (
+      (
+          0.5 -
+            (
+              (0.5 - 0.5) /
+                (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        ((0.5 - 0.5) / (var(--site--viewport-max) - var(--site--viewport-min))) *
+        100vw
+    ),
+    0.5 * 1rem
+  );
+  --_typography---font-size--text-main: clamp(
+    1.125 * 1rem,
+    (
+      (
+          1.125 -
+            (
+              (1.125 - 1.125) /
+                (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        (
+          (1.125 - 1.125) /
+            (var(--site--viewport-max) - var(--site--viewport-min))
+        ) * 100vw
+    ),
+    1.125 * 1rem
+  );
+  --border-width--main: 0.0625rem;
+  --_theme---border: var(--swatch--neutral-mid);
+  --swatch--transparent: transparent;
+  --_theme---input--background: var(--_theme---background-2);
+  --_theme---input--border: var(--swatch--neutral-mid);
+  --_theme---input--text: var(--swatch--dark);
+  --focus--offset-inner: calc(var(--focus--width) * -1);
+  --_theme---button-primary--text: var(--swatch--brand-text);
+  --_theme---button-primary--text-hover: var(--_theme---button-primary--text);
+  --_theme---button-primary--border: var(--_theme---button-primary--background);
+  --_theme---button-primary--border-hover: var(
+    --_theme---button-primary--background
+  );
+  --_theme---button-secondary--text: var(--_theme---text);
+  --_theme---button-secondary--text-hover: var(
+    --_theme---button-primary--text-hover
+  );
+  --_theme---button-secondary--border: var(--_theme---border);
+  --_theme---button-secondary--border-hover: var(
+    --_theme---button-primary--border-hover
+  );
+  --_theme---text-link--border: var(--swatch--transparent);
+  --_theme---text-link--text: var(--_theme---button-primary--background);
+  --_theme---text-link--text-hover: var(--_theme---button-primary--background);
+  --button-size--medium: 3rem;
+  --_theme---button-primary--background: var(--swatch--brand);
+  --_theme---button-primary--background-hover: var(--swatch--brand-80);
+  --_theme---button-secondary--background: var(--swatch--transparent);
+  --_theme---button-secondary--background-hover: var(
+    --_theme---button-primary--background-hover
+  );
+  --button-size--large: 5rem;
+  --_state---false: 0;
+  --_state---true: 1;
+  --radius--small: 0.5rem;
+  --_spacing---space--0: 0px;
+  --nav--max-width-outer: var(--max-width--full);
+  --nav--spacing-outer-horizontal: 0rem;
+  --nav--banner-height: 2rem;
+  --_theme---nav--banner-background: var(--_theme---button-primary--background);
+  --_theme---nav--banner-text: var(--_theme---button-primary--text);
+  --nav--height: 4.5rem;
+  --nav--radius: 0rem;
+  --_theme---nav--background: var(--_theme---background);
+  --nav--spacing-outer-vertical: 0rem;
+  --swatch--dark: black;
+  --nav--max-width-inner: var(--max-width--main);
+  --nav--spacing-inner-horizontal: var(--site--margin);
+  --helpers--faded: 0.8;
+  --nav--hamburger-thickness: var(--border-width--main);
+  --nav--hamburger-gap: var(--_spacing---space--1);
+  --_theme---nav--text: var(--_theme---text);
+  --focus--width: 0.125rem;
+  --swatch--brand: #084235;
+  --swatch--light: white;
+  --_theme---text-link--border-hover: var(
+    --_theme---button-primary--background
+  );
+  --_responsive---stack: var(--_responsive---small);
+  --swatch--brand-10: color-mix(
+    in srgb,
+    var(--swatch--brand),
+    var(--swatch--light) 90%
+  );
+  --icon-size--huge: clamp(
+    1.5 * 1rem,
+    (
+      (
+          1.5 -
+            (
+              (2 - 1.5) /
+                (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        ((2 - 1.5) / (var(--site--viewport-max) - var(--site--viewport-min))) *
+        100vw
+    ),
+    2 * 1rem
+  );
+  --_theme---text-inverse\<deleted\|variable-13ef7953-a56e-d89b-c70f-223861e873a5\>: var(
+    --swatch--dark
+  );
+  --_theme---transparent\<deleted\|variable-08082cc1-1be3-04bc-ac7c-9af1854a614f\>: color-mix(
+    in srgb,
+    var(--_theme---background),
+    var(--swatch--transparent) 100%
+  );
+  --_spacing---section-space--small: clamp(
+    3 * 1rem,
+    (
+      (
+          3 -
+            (
+              (5 - 3) / (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        ((5 - 3) / (var(--site--viewport-max) - var(--site--viewport-min))) *
+        100vw
+    ),
+    5 * 1rem
+  );
+  --border-width--thick: calc(var(--border-width--main) * 2);
+  --nav--anchor-height: 3.5rem;
+  --swatch--dark-20: color-mix(
+    in srgb,
+    var(--swatch--dark),
+    var(--swatch--light) 80%
+  );
+  --helpers--sticky-top: var(--nav--height-total);
+  --_typography---font--mono-family: "Söhne Mono", Arial, sans-serif;
+  --_text-style---text-transform: var(--_typography---text-transform--none);
+  --site--viewport-max: 90;
+  --site--viewport-min: 20;
+  --_theme---input--placeholder: var(--swatch--dark-60);
+  --_theme---input--border-focused: var(--swatch--dark);
+  --_theme---selection--background: var(--swatch--brand-20);
+  --_theme---selection--text: var(--swatch--brand);
+  --max-width--full: 100%;
+  --radius--tiny: 0.125rem;
+  --radius--large: clamp(
+    1.125 * 1rem,
+    (
+      (
+          1.125 -
+            (
+              (1.5 - 1.125) /
+                (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        (
+          (1.5 - 1.125) /
+            (var(--site--viewport-max) - var(--site--viewport-min))
+        ) * 100vw
+    ),
+    1.5 * 1rem
+  );
+  --focus--offset-outer: 0.1875rem;
+  --swatch--neutral-light: #f8f8f8;
+  --swatch--neutral-mid: #efefef;
+  --swatch--light-80: color-mix(
+    in srgb,
+    var(--swatch--light),
+    var(--swatch--transparent) 20%
+  );
+  --swatch--light-60: color-mix(
+    in srgb,
+    var(--swatch--light),
+    var(--swatch--transparent) 40%
+  );
+  --swatch--light-40: color-mix(
+    in srgb,
+    var(--swatch--light),
+    var(--swatch--transparent) 60%
+  );
+  --swatch--light-20: color-mix(
+    in srgb,
+    var(--swatch--light),
+    var(--swatch--transparent) 80%
+  );
+  --swatch--light-10: color-mix(
+    in srgb,
+    var(--swatch--light),
+    var(--swatch--transparent) 90%
+  );
+  --swatch--dark-80: color-mix(
+    in srgb,
+    var(--swatch--dark),
+    var(--swatch--light) 20%
+  );
+  --swatch--dark-60: color-mix(
+    in srgb,
+    var(--swatch--dark),
+    var(--swatch--light) 40%
+  );
+  --swatch--dark-40: color-mix(
+    in srgb,
+    var(--swatch--dark),
+    var(--swatch--light) 60%
+  );
+  --swatch--dark-10: color-mix(
+    in srgb,
+    var(--swatch--dark),
+    var(--swatch--light) 90%
+  );
+  --swatch--brand-80: color-mix(
+    in srgb,
+    var(--swatch--brand),
+    var(--swatch--light) 20%
+  );
+  --swatch--brand-60: color-mix(
+    in srgb,
+    var(--swatch--brand),
+    var(--swatch--light) 40%
+  );
+  --swatch--brand-40: color-mix(
+    in srgb,
+    var(--swatch--brand),
+    var(--swatch--light) 60%
+  );
+  --swatch--brand-20: color-mix(
+    in srgb,
+    var(--swatch--brand),
+    var(--swatch--light) 80%
+  );
+  --swatch--brand-5: color-mix(
+    in srgb,
+    var(--swatch--brand),
+    var(--swatch--light) 95%
+  );
+  --swatch--brand-text: var(--swatch--light);
+  --swatch--brand-text-o20: color-mix(
+    in srgb,
+    var(--swatch--brand-text) 20%,
+    transparent
+  );
+  --swatch--tint: #3b685d;
+  --swatch--tint-80: color-mix(
+    in srgb,
+    var(--swatch--tint),
+    var(--swatch--light) 20%
+  );
+  --swatch--tint-60: color-mix(
+    in srgb,
+    var(--swatch--tint),
+    var(--swatch--light) 40%
+  );
+  --swatch--tint-40: color-mix(
+    in srgb,
+    var(--swatch--tint),
+    var(--swatch--light) 60%
+  );
+  --swatch--tint-20: color-mix(
+    in srgb,
+    var(--swatch--tint),
+    var(--swatch--light) 80%
+  );
+  --swatch--tint-10: color-mix(
+    in srgb,
+    var(--swatch--tint),
+    var(--swatch--light) 90%
+  );
+  --swatch--accent1-80: color-mix(
+    in srgb,
+    var(--swatch--accent1),
+    var(--swatch--light) 20%
+  );
+  --swatch--accent1-60: color-mix(
+    in srgb,
+    var(--swatch--accent1),
+    var(--swatch--light) 40%
+  );
+  --swatch--accent1-40: color-mix(
+    in srgb,
+    var(--swatch--accent1),
+    var(--swatch--light) 60%
+  );
+  --_spacing---section-space--none: 0px;
+  --_spacing---section-space--large: clamp(
+    5.5 * 1rem,
+    (
+      (
+          5.5 -
+            (
+              (10 - 5.5) /
+                (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        ((10 - 5.5) / (var(--site--viewport-max) - var(--site--viewport-min))) *
+        100vw
+    ),
+    10 * 1rem
+  );
+  --_spacing---section-space--page-top: clamp(
+    7 * 1rem,
+    (
+      (
+          7 -
+            (
+              (16 - 7) / (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        ((16 - 7) / (var(--site--viewport-max) - var(--site--viewport-min))) *
+        100vw
+    ),
+    16 * 1rem
+  );
+  --swatch--accent1-20: color-mix(
+    in srgb,
+    var(--swatch--accent1),
+    var(--swatch--light) 80%
+  );
+  --swatch--accent2: #7d6e54;
+  --swatch--accent2-80: color-mix(
+    in srgb,
+    var(--swatch--accent2),
+    var(--swatch--light) 20%
+  );
+  --swatch--accent2-60: color-mix(
+    in srgb,
+    var(--swatch--accent2),
+    var(--swatch--light) 40%
+  );
+  --swatch--accent2-40: color-mix(
+    in srgb,
+    var(--swatch--accent2),
+    var(--swatch--light) 60%
+  );
+  --swatch--accent2-20: color-mix(
+    in srgb,
+    var(--swatch--accent2),
+    var(--swatch--light) 80%
+  );
+  --_theme---nav--background-transparent: color-mix(
+    in srgb,
+    var(--_theme---nav--background) 0%,
+    transparent 100%
+  );
+  --swatch--accent2-10: color-mix(
+    in srgb,
+    var(--swatch--accent2),
+    var(--swatch--light) 90%
+  );
+  --swatch--accent3: #fff9ee;
+  --swatch--accent3-80: color-mix(
+    in srgb,
+    var(--swatch--accent3),
+    var(--swatch--light) 20%
+  );
+  --swatch--accent3-60: color-mix(
+    in srgb,
+    var(--swatch--accent3),
+    var(--swatch--light) 40%
+  );
+  --swatch--accent3-40: color-mix(
+    in srgb,
+    var(--swatch--accent3),
+    var(--swatch--light) 60%
+  );
+  --swatch--accent3-20: color-mix(
+    in srgb,
+    var(--swatch--accent3),
+    var(--swatch--light) 80%
+  );
+  --swatch--accent3-10: color-mix(
+    in srgb,
+    var(--swatch--accent3),
+    var(--swatch--light) 90%
+  );
+  --nav--has-nav: 1;
+  --nav--has-banner: 0;
+  --nav--has-anchor: 0;
+  --_typography---font--primary-family: "Untitled Serif", Georgia, sans-serif;
+  --_typography---font--primary-trim-top: 0.29em;
+  --_typography---font--primary-trim-bottom: 0.36em;
+  --_typography---font--secondary-trim-top: 0.35em;
+  --_typography---font--secondary-trim-bottom: 0.375em;
+  --_typography---font--mono-trim-top: 0.35em;
+  --_typography---font--mono-trim-bottom: 0.37em;
+  --_typography---font--font-regular: 400;
+  --_typography---letter-spacing--normal: 0em;
+  --_typography---letter-spacing--close: -0.02em;
+  --_typography---letter-spacing--tight: -0.03em;
+  --_typography---letter-spacing--spread: 0.1em;
+  --_typography---line-height--medium: 1.1;
+  --_typography---line-height--large: 1.3;
+  --_typography---line-height--huge: 1.5;
+  --_typography---font-size--text-xxsmall: clamp(
+    0.625 * 1rem,
+    (
+      (
+          0.625 -
+            (
+              (0.625 - 0.625) /
+                (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        (
+          (0.625 - 0.625) /
+            (var(--site--viewport-max) - var(--site--viewport-min))
+        ) * 100vw
+    ),
+    0.625 * 1rem
+  );
+  --_typography---font-size--text-large: clamp(
+    1.25 * 1rem,
+    (
+      (
+          1.25 -
+            (
+              (1.25 - 1.25) /
+                (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        (
+          (1.25 - 1.25) /
+            (var(--site--viewport-max) - var(--site--viewport-min))
+        ) * 100vw
+    ),
+    1.25 * 1rem
+  );
+  --_typography---font-size--h3: clamp(
+    1.75 * 1rem,
+    (
+      (
+          1.75 -
+            (
+              (2.5 - 1.75) /
+                (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        ((2.5 - 1.75) / (var(--site--viewport-max) - var(--site--viewport-min))) *
+        100vw
+    ),
+    2.5 * 1rem
+  );
+  --_typography---font-size--h2: clamp(
+    2.25 * 1rem,
+    (
+      (
+          2.25 -
+            (
+              (3.25 - 2.25) /
+                (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        (
+          (3.25 - 2.25) /
+            (var(--site--viewport-max) - var(--site--viewport-min))
+        ) * 100vw
+    ),
+    3.25 * 1rem
+  );
+  --_typography---font-size--h1: clamp(
+    3 * 1rem,
+    (
+      (
+          3 -
+            (
+              (4 - 3) / (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        ((4 - 3) / (var(--site--viewport-max) - var(--site--viewport-min))) *
+        100vw
+    ),
+    4 * 1rem
+  );
+  --_typography---font-size--display: clamp(
+    4 * 1rem,
+    (
+      (
+          4 -
+            (
+              (5.5 - 4) /
+                (var(--site--viewport-max) - var(--site--viewport-min)) *
+                var(--site--viewport-min)
+            )
+        ) * 1rem +
+        ((5.5 - 4) / (var(--site--viewport-max) - var(--site--viewport-min))) *
+        100vw
+    ),
+    5.5 * 1rem
+  );
+  --_typography---text-transform--none: var(--text-transform, none);
+  --_typography---text-transform--uppercase: uppercase;
+  --_typography---text-transform--capitalize: capitalize;
+  --_typography---text-transform--lowercase: lowercase;
+  --swatch--dark-800\<deleted\|variable-365b4c66-1363-4e00-8470-ebbf96bc2fde\>: #2f2b2d;
+}

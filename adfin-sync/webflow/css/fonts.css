@@ -1,0 +1,74 @@
+/* Fonts */
+
+@font-face {
+  font-family: "Untitled Serif";
+  src: url("https://cdn.prod.website-files.com/6a69cb89a361f85b63b37d60/6a8c1a7f40b776efee214125_untitled-serif-regular.woff2")
+      format("woff2"),
+    url("https://cdn.prod.website-files.com/6a69cb89a361f85b63b37d60/6a8c1a7f350c564100ade692_UntitledSerif-Regular.ttf")
+      format("truetype"),
+    url("https://cdn.prod.website-files.com/6a69cb89a361f85b63b37d60/6a8c1a7fd81dc36b1b01e54c_UntitledSerif-Regular.otf")
+      format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Söhne";
+  src: url("https://cdn.prod.website-files.com/6a69cb89a361f85b63b37d60/6a8c1df71bcddd98ecb0df11_soehne-buch.woff2")
+      format("woff2"),
+    url("https://cdn.prod.website-files.com/6a69cb89a361f85b63b37d60/6a8c1df740b776efee2196d4_So%CC%88hne-Buch.ttf")
+      format("truetype"),
+    url("https://cdn.prod.website-files.com/6a69cb89a361f85b63b37d60/6a8c1df7eb905bd4e57ea0a4_So%CC%88hne-Buch.otf")
+      format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Söhne";
+  src: url("https://cdn.prod.website-files.com/6a69cb89a361f85b63b37d60/6a8c1e2b1bcddd98ecb0e457_soehne-kraftig.woff2")
+      format("woff2"),
+    url("https://cdn.prod.website-files.com/6a69cb89a361f85b63b37d60/6a8c1e2b23fb8c3d80d7840f_So%CC%88hne-Kra%CC%88ftig.ttf")
+      format("truetype"),
+    url("https://cdn.prod.website-files.com/6a69cb89a361f85b63b37d60/6a8c1e2b69f1c108c3044d26_So%CC%88hne-Kra%CC%88ftig.otf")
+      format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Söhne";
+  src: url("https://cdn.prod.website-files.com/6a69cb89a361f85b63b37d60/6a8c1e3f40b776efee219e72_soehne-halbfett.woff2")
+      format("woff2"),
+    url("https://cdn.prod.website-files.com/6a69cb89a361f85b63b37d60/6a8c1e3f4bb90fa7370a8a35_So%CC%88hne-Halbfett.ttf")
+      format("truetype"),
+    url("https://cdn.prod.website-files.com/6a69cb89a361f85b63b37d60/6a8c1e3fad5bf3093632ecd2_So%CC%88hne-Halbfett.otf")
+      format("opentype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Söhne Mono";
+  src: url("https://cdn.prod.website-files.com/6a69cb89a361f85b63b37d60/6a8c76775ded4bc7d72e0383_So%CC%88hneMono-Buch.otf")
+    format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Söhne Mono";
+  src: url("https://cdn.prod.website-files.com/6a69cb89a361f85b63b37d60/6a8c7677a5bedfe3523afe4f_So%CC%88hneMono-Kra%CC%88ftig.otf")
+    format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Söhne Mono";
+  src: url("https://cdn.prod.website-files.com/6a69cb89a361f85b63b37d60/6a8c7677b6bec958864cb431_So%CC%88hneMono-Halbfett.otf")
+    format("opentype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}

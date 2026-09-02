@@ -1,0 +1,20 @@
+{
+  "cloud": {
+    "contract_version": "1",
+    "framework": "astro",
+    "framework_version": "7.0.5",
+    "entrypoint_path": "./entry.mjs",
+    "deployment_type": "ssr",
+    "skip_no_bundle": true,
+    "assets_source_skip_mount_path": true,
+    "app_id": "3414210f-5d4a-4506-9c8a-738e00e2d9e8"
+  },
+  "devlink-export": {
+    "rootDir": "./webflow",
+    "components": ".*",
+    "componentGroups": ".*",
+    "ts": false,
+    "cssScopes": true,
+    "relativeHrefRoot": "/"
+  }
+}
