@@ -15,6 +15,14 @@ const TOC_COMPONENT = '.toc_component';
 const TOC_LINK = '[fs-toc-element="link"]';
 const ACTIVE_CLASS = 'is-active';
 
+/**
+ * The hand-authored variant: same component, but links are added manually and
+ * Finsweet isn't in play — so it inits immediately and owns its own click scroll.
+ */
+const MANUAL_VARIANT = '[data-wf--table-of-contents--variant="manual"]';
+/** Auto TOCs are everything Finsweet builds — i.e. not the manual variant. */
+const AUTO_TOC_COMPONENT = `${TOC_COMPONENT}:not(${MANUAL_VARIANT})`;
+
 /** Opacity ramp: the active link is fully opaque, the furthest is faded. */
 const ACTIVE_OPACITY = 1;
 const FURTHEST_OPACITY = 0.2;
@@ -35,6 +43,9 @@ const REACH_TOLERANCE = 2;
 
 const log = createLogger('toc');
 
+/** Elements already wired, so the manual and Finsweet paths never double-init one. */
+const initialised = new WeakSet<HTMLElement>();
+
 interface TocItem {
   link: HTMLAnchorElement;
   item: HTMLElement;
@@ -48,7 +59,13 @@ interface TocItem {
  * Works on both the desktop sidebar and the stacked mobile tab bar.
  */
 const createToc = (component: HTMLElement): Destroyable => {
+  // Guard against double-init — the manual and Finsweet paths could both reach
+  // the same element depending on how the variant attribute is placed.
+  if (initialised.has(component)) return { destroy: () => undefined };
+  initialised.add(component);
+
   const cleanup = createCleanup();
+  const manual = component.matches(MANUAL_VARIANT);
 
   // Pair each link with the section its href points at, dropping any dead links.
   const items = queryElements<HTMLAnchorElement>(TOC_LINK, component)
@@ -132,7 +149,18 @@ const createToc = (component: HTMLElement): Destroyable => {
     const isLast = index === items.length - 1;
     const left = isLast ? offsetLeft + linkRect.width - linksList.clientWidth : offsetLeft;
 
+    log(`scrolling link [${index}] into view in the strip (left=${Math.round(left)})`);
     linksList.scrollTo({ left, behavior: 'smooth' });
+  };
+
+  // Scrolls the target section to its resting line. scrollIntoView honours the
+  // section's scroll-margin-top, so it lands exactly where active-tracking expects.
+  const scrollSectionIntoView = (index: number): void => {
+    const section = items[index]?.section;
+    if (!section) return;
+
+    log(`scrolling section #${section.id} into view`);
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const setActive = (index: number): void => {
@@ -189,13 +217,36 @@ const createToc = (component: HTMLElement): Destroyable => {
     update();
   }, 150);
 
+  // Log clicks on a TOC link. For auto TOCs the page scroll is the browser's
+  // native anchor jump; the manual variant isn't wired to that, so we take the
+  // click over (and stop Webflow's smooth-scroll handler) and scroll ourselves.
+  const handleClick = (event: MouseEvent): void => {
+    const target = event.target as Element | null;
+    const link = target?.closest<HTMLAnchorElement>(TOC_LINK);
+    if (!link || !component.contains(link)) return;
+
+    const index = items.findIndex((item) => item.link === link);
+    log(
+      `link clicked -> [${index}] ${link.textContent?.trim() ?? '?'} (${link.hash || 'no hash'})`
+    );
+
+    if (manual && index >= 0) {
+      event.preventDefault();
+      event.stopPropagation();
+      scrollSectionIntoView(index);
+    }
+  };
+
+  cleanup.add(on<MouseEvent>(component, 'click', handleClick));
   cleanup.add(on(window, 'scroll', requestUpdate, { passive: true }));
   cleanup.add(on(window, 'resize', refresh));
   cleanup.add(() => frame && cancelAnimationFrame(frame));
   cleanup.add(() => refresh.cancel());
 
   measure();
-  log(`thresholds=[${thresholds.map((t) => t.toFixed(0)).join(', ')}] stacked=${stacked}`);
+  log(
+    `thresholds=[${thresholds.map((t) => t.toFixed(0)).join(', ')}] stacked=${stacked} manual=${manual}`
+  );
   update();
 
   return {
@@ -218,11 +269,17 @@ const createToc = (component: HTMLElement): Destroyable => {
  * every TOC on the page (one instance each).
  */
 export const toc = (): void => {
-  log('waiting for finsweet toc…');
+  // Manual TOCs are hand-authored, already in the DOM, and don't depend on
+  // Finsweet (which may not even be present) — initialise them immediately.
+  const manual = createInstances(MANUAL_VARIANT, createToc);
+  log(`found ${manual.length} manual TOC(s)`);
 
+  // Auto TOCs get their links injected by Finsweet; wait for it, then init the
+  // rest. The WeakSet guard keeps this from re-initialising anything above.
+  log('waiting for finsweet toc…');
   onFinsweetAttribute('toc', () => {
-    const found = queryElements(TOC_COMPONENT);
-    log(`finsweet toc ready: found ${found.length} "${TOC_COMPONENT}" on page`);
-    createInstances(TOC_COMPONENT, createToc);
+    const found = queryElements(AUTO_TOC_COMPONENT);
+    log(`finsweet toc ready: found ${found.length} auto TOC(s)`);
+    createInstances(AUTO_TOC_COMPONENT, createToc);
   });
 };
