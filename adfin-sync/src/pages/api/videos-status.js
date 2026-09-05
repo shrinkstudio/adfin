@@ -1,14 +1,14 @@
 import { env as runtimeEnv } from 'cloudflare:workers';
 import { withFallback } from '../../lib/config.js';
-import { syncEvents } from '../../lib/sync.js';
+import { videosReport } from '../../lib/syncVideos.js';
 
 export const prerender = false;
 
-export const POST = async () => {
+export const GET = async () => {
   const env = withFallback(runtimeEnv);
   try {
-    const result = await syncEvents(env);
-    return new Response(JSON.stringify(result), {
+    const report = await videosReport(env);
+    return new Response(JSON.stringify(report), {
       headers: { 'content-type': 'application/json' },
     });
   } catch (error) {
