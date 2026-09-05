@@ -59,6 +59,9 @@ const itemStatus = (item) => {
 export const statusReport = async (env) => {
   const { lumaEvents, items, byLumaId } = await loadState(env);
   const lumaIds = new Set(lumaEvents.map((e) => e.lumaId));
+  const lastActivity = items
+    .filter((i) => i.fieldData['luma-id'])
+    .reduce((max, i) => (max === null || i.lastUpdated > max ? i.lastUpdated : max), null);
 
   const events = lumaEvents.map((event) => {
     const item = byLumaId.get(event.lumaId) ?? null;
@@ -78,38 +81,58 @@ export const statusReport = async (env) => {
     .filter(([lumaId]) => !lumaIds.has(lumaId))
     .map(([lumaId, item]) => ({ lumaId, name: item.fieldData.name, status: itemStatus(item) }));
 
-  return { events, orphaned, cmsTotal: items.length };
+  return { events, orphaned, cmsTotal: items.length, lastActivity };
 };
 
-/** Run the sync. Returns a summary of what changed. */
-export const syncEvents = async (env) => {
+/** Run the sync. `limit` caps writes per call so requests stay fast; the
+ * caller loops while `remaining` is non-zero. */
+export const syncEvents = async (env, { limit = Infinity } = {}) => {
   const { lumaEvents, items, byLumaId } = await loadState(env);
   const usedSlugs = new Set(items.map((i) => i.fieldData.slug));
-  const created = [];
-  const updated = [];
 
+  const ops = [];
   for (const event of lumaEvents) {
     const existing = byLumaId.get(event.lumaId);
-
     if (!existing) {
-      let slug = slugify(event.name);
-      while (usedSlugs.has(slug)) slug = `${slug}-${event.lumaId.slice(-4).toLowerCase()}`;
-      usedSlugs.add(slug);
-      await createItem(env.WEBFLOW_API_TOKEN, EVENTS_COLLECTION_ID, {
+      ops.push({
+        kind: 'create',
         name: event.name,
-        slug,
-        ...lumaFields(event),
-        ...(event.coverUrl ? { image: { url: event.coverUrl } } : {}),
+        run: () => {
+          let slug = slugify(event.name);
+          while (usedSlugs.has(slug)) slug = `${slug}-${event.lumaId.slice(-4).toLowerCase()}`;
+          usedSlugs.add(slug);
+          return createItem(env.WEBFLOW_API_TOKEN, EVENTS_COLLECTION_ID, {
+            name: event.name,
+            slug,
+            ...lumaFields(event),
+            ...(event.coverUrl ? { image: { url: event.coverUrl } } : {}),
+          });
+        },
       });
-      created.push(event.name);
       continue;
     }
-
     const incoming = { ...lumaFields(event), name: event.name };
     if (!changed(existing.fieldData, incoming)) continue;
-    await updateItem(env.WEBFLOW_API_TOKEN, EVENTS_COLLECTION_ID, existing.id, incoming);
-    updated.push(event.name);
+    ops.push({
+      kind: 'update',
+      name: event.name,
+      run: () => updateItem(env.WEBFLOW_API_TOKEN, EVENTS_COLLECTION_ID, existing.id, incoming),
+    });
   }
 
-  return { created, updated, total: lumaEvents.length, at: new Date().toISOString() };
+  const created = [];
+  const updated = [];
+  const batch = ops.slice(0, limit);
+  for (const op of batch) {
+    await op.run();
+    (op.kind === 'create' ? created : updated).push(op.name);
+  }
+
+  return {
+    created,
+    updated,
+    remaining: ops.length - batch.length,
+    total: lumaEvents.length,
+    at: new Date().toISOString(),
+  };
 };

@@ -1,0 +1,26 @@
+name: Content Sync
+
+on:
+  schedule:
+    # Daily, 06:40 UTC — drafts are waiting when the team starts.
+    - cron: "40 6 * * *"
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync Luma events and YouTube videos
+        run: |
+          set -e
+          sync () {
+            for i in $(seq 1 12); do
+              out=$(curl -sf -X POST "https://ss-adfin-staging.webflow.io/sync/api/$1?limit=8")
+              echo "$1: $out"
+              echo "$out" | grep -q '"remaining":0' && return 0
+            done
+            echo "$1: still remaining after 12 batches" >&2
+            return 1
+          }
+          sync sync
+          sync videos-sync

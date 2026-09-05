@@ -23,7 +23,9 @@ const slugify = (name) =>
 const videoFields = (video) => ({
   'youtube-id': video.youtubeId,
   'video-url': `https://www.youtube.com/watch?v=${video.youtubeId}`,
-  'published-on-2': video.publishedAt,
+  // Normalised to Webflow's stored format so comparisons don't flag
+  // "2026-05-13T15:27:25Z" vs "2026-05-13T15:27:25.000Z" forever.
+  'published-on-2': video.publishedAt ? new Date(video.publishedAt).toISOString() : null,
 });
 
 const changed = (existing, incoming) =>
@@ -49,7 +51,11 @@ const itemStatus = (item) => {
 export const videosReport = async (env) => {
   const { videos, byYoutubeId, items } = await loadState(env);
   const feedIds = new Set(videos.map((v) => v.youtubeId));
+  const lastActivity = items
+    .filter((i) => i.fieldData['youtube-id'])
+    .reduce((max, i) => (max === null || i.lastUpdated > max ? i.lastUpdated : max), null);
   return {
+    lastActivity,
     videos: videos.map((video) => {
       const item = byYoutubeId.get(video.youtubeId) ?? null;
       return {
@@ -57,6 +63,7 @@ export const videosReport = async (env) => {
         name: video.title,
         publishedAt: video.publishedAt,
         url: `https://www.youtube.com/watch?v=${video.youtubeId}`,
+        thumb: item?.fieldData?.thumbnail?.url ?? video.thumbnail ?? null,
         status: itemStatus(item),
         pendingUpdate: item
           ? changed(item.fieldData, { ...videoFields(video), name: video.title })
@@ -71,34 +78,53 @@ export const videosReport = async (env) => {
   };
 };
 
-export const syncVideos = async (env) => {
+export const syncVideos = async (env, { limit = Infinity } = {}) => {
   const { videos, byYoutubeId, items } = await loadState(env);
   const usedSlugs = new Set(items.map((i) => i.fieldData.slug));
-  const created = [];
-  const updated = [];
 
+  const ops = [];
   for (const video of videos) {
     const existing = byYoutubeId.get(video.youtubeId);
-
     if (!existing) {
-      let slug = slugify(video.title);
-      while (usedSlugs.has(slug)) slug = `${slug}-${video.youtubeId.slice(-4).toLowerCase()}`;
-      usedSlugs.add(slug);
-      await createItem(env.WEBFLOW_API_TOKEN, VIDEOS_COLLECTION_ID, {
+      ops.push({
+        kind: 'create',
         name: video.title,
-        slug,
-        ...videoFields(video),
-        ...(video.thumbnail ? { thumbnail: { url: video.thumbnail } } : {}),
+        run: () => {
+          let slug = slugify(video.title);
+          while (usedSlugs.has(slug)) slug = `${slug}-${video.youtubeId.slice(-4).toLowerCase()}`;
+          usedSlugs.add(slug);
+          return createItem(env.WEBFLOW_API_TOKEN, VIDEOS_COLLECTION_ID, {
+            name: video.title,
+            slug,
+            ...videoFields(video),
+            ...(video.thumbnail ? { thumbnail: { url: video.thumbnail } } : {}),
+          });
+        },
       });
-      created.push(video.title);
       continue;
     }
-
     const incoming = { ...videoFields(video), name: video.title };
     if (!changed(existing.fieldData, incoming)) continue;
-    await updateItem(env.WEBFLOW_API_TOKEN, VIDEOS_COLLECTION_ID, existing.id, incoming);
-    updated.push(video.title);
+    ops.push({
+      kind: 'update',
+      name: video.title,
+      run: () => updateItem(env.WEBFLOW_API_TOKEN, VIDEOS_COLLECTION_ID, existing.id, incoming),
+    });
   }
 
-  return { created, updated, total: videos.length, at: new Date().toISOString() };
+  const created = [];
+  const updated = [];
+  const batch = ops.slice(0, limit);
+  for (const op of batch) {
+    await op.run();
+    (op.kind === 'create' ? created : updated).push(op.name);
+  }
+
+  return {
+    created,
+    updated,
+    remaining: ops.length - batch.length,
+    total: videos.length,
+    at: new Date().toISOString(),
+  };
 };
