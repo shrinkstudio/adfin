@@ -49,3 +49,12 @@ jobs:
           git push -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:production
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # jsDelivr caches the production branch at its edge (s-maxage 12h), so purge
+      # it after each deploy to serve the new build immediately. Note this only
+      # refreshes the CDN — browsers still honour the 7-day max-age, so the loader
+      # needs its own cache-bust for returning visitors to pick changes up.
+      - name: Purge jsDelivr cache
+        run: |
+          curl -sf "https://purge.jsdelivr.net/gh/${GITHUB_REPOSITORY}@production/index.js" \
+            || echo "jsDelivr purge failed (non-fatal)"
