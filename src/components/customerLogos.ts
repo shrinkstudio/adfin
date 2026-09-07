@@ -14,7 +14,7 @@ const SHOW_ATTRIBUTE = 'customer-logos-show';
 
 /** How long each set of logos stays before a swap; `data-customer-logos-cycle`
  * on the component overrides it (seconds). */
-const DEFAULT_CYCLE_MS = 5000;
+const DEFAULT_CYCLE_MS = 10000;
 const CYCLE_ATTRIBUTE = 'customer-logos-cycle';
 /** Cross-fade duration when swapping a logo out for another. */
 const FADE_MS = 400;
