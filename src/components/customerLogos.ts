@@ -12,8 +12,10 @@ const CUSTOMER_LOGOS_ITEM = attributeSelector('customer-logos', 'item');
  */
 const SHOW_ATTRIBUTE = 'customer-logos-show';
 
-/** How long each set of logos stays before a swap. */
-const CYCLE_MS = 5000;
+/** How long each set of logos stays before a swap; `data-customer-logos-cycle`
+ * on the component overrides it (seconds). */
+const DEFAULT_CYCLE_MS = 5000;
+const CYCLE_ATTRIBUTE = 'customer-logos-cycle';
 /** Cross-fade duration when swapping a logo out for another. */
 const FADE_MS = 400;
 /** Delay added per item so a multi-logo swap ripples rather than moving as one. */
@@ -65,6 +67,9 @@ const createCustomerLogos = (component: HTMLElement): Destroyable => {
   // Absent/invalid → treat as "show everything" (which then cycles nothing).
   let show = Math.floor(getNumberAttribute(component, SHOW_ATTRIBUTE, 0)) - 1;
   if (!(show >= 1)) show = total;
+
+  const cycleSeconds = getNumberAttribute(component, CYCLE_ATTRIBUTE, 0);
+  const cycleMs = cycleSeconds > 0 ? cycleSeconds * 1000 : DEFAULT_CYCLE_MS;
 
   log(`init: ${total} logo(s), show ${show}`);
 
@@ -177,9 +182,9 @@ const createCustomerLogos = (component: HTMLElement): Destroyable => {
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!reduceMotion) {
-    const timer = window.setInterval(tick, CYCLE_MS);
+    const timer = window.setInterval(tick, cycleMs);
     cleanup.add(() => window.clearInterval(timer));
-    log(`cycling ${cycle === cycleAll ? 'all' : 'one'} every ${CYCLE_MS}ms`);
+    log(`cycling ${cycle === cycleAll ? 'all' : 'one'} every ${cycleMs}ms`);
   }
 
   return {
