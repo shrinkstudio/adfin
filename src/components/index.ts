@@ -6,6 +6,8 @@ import { customerLogos } from './customerLogos';
 import { duoTab } from './duoTab';
 import { emailHandoff } from './emailHandoff';
 import { eventMap } from './eventMap';
+import { hubMap } from './hubMap';
+import { hubspotForms } from './hubspotForms';
 import { progressTab } from './progressTab';
 import { rotatingTitle } from './rotatingTitle';
 import { toc } from './toc';
@@ -22,6 +24,8 @@ export const components = (): void => {
   duoTab();
   emailHandoff();
   eventMap();
+  hubMap();
+  hubspotForms();
   progressTab();
   rotatingTitle();
   toc();
