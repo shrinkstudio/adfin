@@ -40,6 +40,8 @@ const collectFields = (form: HTMLFormElement): Record<string, string> => {
     .forEach((input) => {
       if (input instanceof HTMLInputElement && ['submit', 'button', 'hidden'].includes(input.type))
         return;
+      // Checkboxes (eg. marketing consent) only count when ticked.
+      if (input instanceof HTMLInputElement && input.type === 'checkbox' && !input.checked) return;
       const value = input.value.trim();
       if (!value) return;
       const name =
