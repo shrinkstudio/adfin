@@ -8,6 +8,7 @@ import { css } from './styles';
 export interface BookDemoFormProps {
   theme?: 'light' | 'dark';
   routerId?: string;
+  redirectUrl?: string;
   hubspotPortalId?: string;
   hubspotFormGuid?: string;
   turnstileSitekey?: string;
@@ -54,6 +55,7 @@ export function BookDemoForm(props: BookDemoFormProps) {
   const {
     theme = 'light',
     routerId = '5191',
+    redirectUrl = '',
     hubspotPortalId = '',
     hubspotFormGuid = '',
     turnstileSitekey = '0x4AAAAAAAQTptj2So4dx43e',
@@ -113,6 +115,21 @@ export function BookDemoForm(props: BookDemoFormProps) {
       cancelled = true;
     };
   }, [isLast, done, turnstileSitekey]);
+
+  // After a slot is booked in the RevenueHero dialog (it posts MEETING_BOOKED
+  // from its iframe), send the visitor on to the configured page.
+  useEffect(() => {
+    if (!done || !redirectUrl) return;
+    let redirected = false;
+    const onMessage = (e: MessageEvent) => {
+      const type = (e.data && (e.data.type ?? e.data)) as string;
+      if (redirected || (type !== 'MEETING_BOOKED' && type !== 'MEETING_ALREADY_BOOKED')) return;
+      redirected = true;
+      window.location.assign(redirectUrl);
+    };
+    window.addEventListener('message', onMessage);
+    return () => window.removeEventListener('message', onMessage);
+  }, [done, redirectUrl]);
 
   const canSubmit = stepValid && (!turnstileSitekey || !!token) && !submitting;
 

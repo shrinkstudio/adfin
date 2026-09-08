@@ -13,6 +13,7 @@ export default declareComponent(BookDemoForm, {
     hubspotPortalId: props.Text({ name: 'HubSpot portal ID', defaultValue: '' }),
     hubspotFormGuid: props.Text({ name: 'HubSpot form GUID', defaultValue: '' }),
     routerId: props.Text({ name: 'RevenueHero router ID', defaultValue: '5191' }),
+    redirectUrl: props.Text({ name: 'Redirect URL (after booking)', defaultValue: '' }),
     turnstileSitekey: props.Text({ name: 'Turnstile site key', defaultValue: '0x4AAAAAAAQTptj2So4dx43e' }),
 
     // Copy
