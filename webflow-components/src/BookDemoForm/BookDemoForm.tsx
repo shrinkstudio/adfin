@@ -22,6 +22,27 @@ export interface BookDemoFormProps {
 const emptyValues = (): Record<string, string> =>
   Object.fromEntries(ALL_FIELD_NAMES.map((n) => [n, '']));
 
+/**
+ * The site's email-capture forms stash the typed address here on submit
+ * (see emailHandoff in the bundle) before redirecting to this page. Kept in
+ * sessionStorage rather than a query param so the address never appears in
+ * URLs or analytics. `?email=` is accepted as a fallback for direct links.
+ */
+const HANDOFF_KEY = 'adfin:handoff-email';
+
+const readHandoffEmail = (): string | null => {
+  let email: string | null = null;
+  try {
+    email = sessionStorage.getItem(HANDOFF_KEY);
+    if (email) sessionStorage.removeItem(HANDOFF_KEY);
+  } catch {
+    /* storage unavailable */
+  }
+  if (!email) email = new URLSearchParams(window.location.search).get('email');
+  email = (email ?? '').trim();
+  return email && EMAIL_RE.test(email) ? email : null;
+};
+
 function fieldError(field: FieldDef, value: string): string | null {
   const v = (value || '').trim();
   if (field.required && !v) return 'Required';
@@ -51,6 +72,17 @@ export function BookDemoForm(props: BookDemoFormProps) {
   const [formError, setFormError] = useState<string | null>(null);
   const [token, setToken] = useState('');
   const [done, setDone] = useState(false);
+  const [handoff, setHandoff] = useState(false);
+
+  // A handed-off email pre-fills step 1 and opens on the name step, so the
+  // visitor who already typed their address continues rather than repeats.
+  useEffect(() => {
+    const email = readHandoffEmail();
+    if (!email) return;
+    setValues((v) => ({ ...v, email }));
+    setHandoff(true);
+    setStep(1);
+  }, []);
 
   const turnstileRef = useRef<HTMLDivElement | null>(null);
   const isLast = step === STEPS.length - 1;
@@ -139,13 +171,36 @@ export function BookDemoForm(props: BookDemoFormProps) {
           {subheading ? <p className="bd__sub">{subheading}</p> : null}
         </div>
 
+        {handoff && step > 0 ? (
+          <div className="bd__locked">
+            <span className="bd__locked-text">
+              Booking a demo for <strong>{values.email}</strong>
+            </span>
+            <button
+              type="button"
+              className="bd__locked-change"
+              onClick={() => {
+                setHandoff(false);
+                setStep(0);
+              }}
+            >
+              Change
+            </button>
+          </div>
+        ) : null}
+
         <div className="bd__progress">
           <div className="bd__dots">
-            {STEPS.map((_, i) => (
-              <span key={i} className={'bd__dot' + (i < step ? ' is-done' : i === step ? ' is-active' : '')} />
-            ))}
+            {(handoff ? STEPS.slice(1) : STEPS).map((_, i) => {
+              const active = handoff ? step - 1 : step;
+              return (
+                <span key={i} className={'bd__dot' + (i < active ? ' is-done' : i === active ? ' is-active' : '')} />
+              );
+            })}
           </div>
-          <span className="bd__step-label">Step {step + 1} of {STEPS.length}</span>
+          <span className="bd__step-label">
+            Step {handoff ? step : step + 1} of {handoff ? STEPS.length - 1 : STEPS.length}
+          </span>
         </div>
 
         <div className="bd__fields">
@@ -188,8 +243,8 @@ export function BookDemoForm(props: BookDemoFormProps) {
 
         {formError ? <div className="bd__form-error">{formError}</div> : null}
 
-        <div className={'bd__actions' + (step === 0 ? ' is-first' : '')}>
-          {step > 0 ? (
+        <div className={'bd__actions' + (step === (handoff ? 1 : 0) ? ' is-first' : '')}>
+          {step > (handoff ? 1 : 0) ? (
             <button type="button" className="bd__btn bd__btn--ghost" onClick={() => setStep((s) => s - 1)}>
               Back
             </button>

@@ -41,6 +41,11 @@ ${fontFaceCss}
 .bd.theme-dark .bd__sub { color: rgba(255,255,255,0.75); }
 
 /* Progress */
+.bd__locked { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 14px; border: 1px solid var(--line, #e3e3dc); margin-bottom: 16px; font-size: 14px; }
+.bd__locked-text { overflow-wrap: anywhere; }
+.bd__locked-change { background: none; border: none; padding: 0; font: inherit; font-size: 13px; text-decoration: underline; cursor: pointer; color: inherit; opacity: 0.7; }
+.bd__locked-change:hover { opacity: 1; }
+.bd.theme-dark .bd__locked { border-color: rgba(255,255,255,0.25); }
 .bd__progress { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
 .bd__dots { display: flex; gap: 8px; }
 .bd__dot { width: 28px; height: 4px; background: var(--line); transition: background .2s; }
