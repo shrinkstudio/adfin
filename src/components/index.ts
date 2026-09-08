@@ -1,6 +1,7 @@
 import { anchorId } from './anchorId';
 import { anchorLinks } from './anchorLinks';
 import { anchorScroll } from './anchorScroll';
+import { askAi } from './askAi';
 import { customerLogos } from './customerLogos';
 import { duoTab } from './duoTab';
 import { emailHandoff } from './emailHandoff';
@@ -15,6 +16,7 @@ export const components = (): void => {
   anchorId();
   anchorLinks();
   anchorScroll();
+  askAi();
   customerLogos();
   duoTab();
   emailHandoff();
