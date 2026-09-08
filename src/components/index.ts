@@ -3,6 +3,7 @@ import { anchorLinks } from './anchorLinks';
 import { anchorScroll } from './anchorScroll';
 import { customerLogos } from './customerLogos';
 import { duoTab } from './duoTab';
+import { emailHandoff } from './emailHandoff';
 import { progressTab } from './progressTab';
 import { rotatingTitle } from './rotatingTitle';
 import { toc } from './toc';
@@ -16,6 +17,7 @@ export const components = (): void => {
   anchorScroll();
   customerLogos();
   duoTab();
+  emailHandoff();
   progressTab();
   rotatingTitle();
   toc();
