@@ -13,6 +13,7 @@ import { rotatingTitle } from './rotatingTitle';
 import { toc } from './toc';
 import { transition } from './transition';
 import { uiScreenshot } from './uiScreenshot';
+import { videoControls } from './videoControls';
 import { wheel } from './wheel';
 
 export const components = (): void => {
@@ -31,5 +32,6 @@ export const components = (): void => {
   toc();
   transition();
   uiScreenshot();
+  videoControls();
   wheel();
 };
