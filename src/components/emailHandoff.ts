@@ -14,13 +14,13 @@ const log = createLogger('emailHandoff');
 /**
  * Hands the email typed into a capture form over to the Book a Demo flow.
  *
- * `[data-email-capture]` goes on the Webflow form (or its wrapper) whose
- * submit leads to /book-a-demo — the form's own redirect setting does the
- * navigation, Webflow's native submission still records the lead. This only
- * stashes the address in sessionStorage so the demo form can pre-fill it and
- * open on step 2. Nothing sensitive touches the URL.
+ * `[data-email-capture]` goes on the Webflow form (or its wrapper); an
+ * attribute value overrides the destination. Webflow's native submission
+ * still records the lead — this stashes the address in sessionStorage so the
+ * demo form can pre-fill it and open on step 2, then navigates once the
+ * submission confirms. Nothing sensitive touches the URL.
  */
-const DEFAULT_DESTINATION = '/book-a-demo';
+const DEFAULT_DESTINATION = '/demo/demo-form';
 
 const createEmailHandoff = (wrap: HTMLElement): Destroyable | null => {
   const form = wrap instanceof HTMLFormElement ? wrap : wrap.querySelector('form');
