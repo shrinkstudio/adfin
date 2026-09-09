@@ -280,10 +280,26 @@ const slugify = (text: string): string =>
 const buildTocLinks = (component: HTMLElement): number => {
   const linksList = queryElement<HTMLElement>(attributeSelector('toc', 'links'), component);
   const contents = queryElement<HTMLElement>(TOC_CONTENTS);
-  if (!linksList || !contents || linksList.querySelector(TOC_LINK)) return 0;
+  if (!linksList || !contents) return 0;
+
+  // When Finsweet builds nothing it can leave the Designer's placeholder link
+  // ("Anchor link", href="#") behind — never show that to a visitor.
+  queryElements<HTMLAnchorElement>(TOC_LINK, linksList)
+    .filter((link) => (link.getAttribute('href') ?? '#') === '#')
+    .forEach((link) => (link.closest('.toc_item') ?? link).remove());
+
+  if (linksList.querySelector(TOC_LINK)) return 0; // real links exist already
 
   const offsetTop = contents.getAttribute('fs-toc-offsettop');
   const headings = queryElements<HTMLElement>('h2, h3', contents);
+
+  // Nothing to index (some posts use bold paragraphs, not headings): hide the
+  // whole TOC rather than leaving an empty rail.
+  if (!headings.length) {
+    const wrap = component.closest<HTMLElement>('.toc_wrap') ?? component;
+    wrap.style.display = 'none';
+    return 0;
+  }
 
   for (const heading of headings) {
     if (!heading.id) {
