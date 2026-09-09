@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { STEPS, ALL_FIELD_NAMES, EMAIL_RE, type FieldDef } from './steps';
+
 import { submitToHubSpot } from './hubspot';
 import { submitAndOpen } from './revenuehero';
-import { renderTurnstile } from './turnstile';
+import { ALL_FIELD_NAMES, EMAIL_RE, type FieldDef, STEPS } from './steps';
 import { css } from './styles';
+import { renderTurnstile } from './turnstile';
 
 export interface BookDemoFormProps {
   theme?: 'light' | 'dark';
@@ -94,7 +95,7 @@ export function BookDemoForm(props: BookDemoFormProps) {
 
   const stepValid = useMemo(
     () => currentFields.every((f) => !fieldError(f, values[f.name])),
-    [currentFields, values],
+    [currentFields, values]
   );
 
   // Render the Turnstile widget when the final step mounts.
@@ -106,7 +107,7 @@ export function BookDemoForm(props: BookDemoFormProps) {
       turnstileRef.current,
       turnstileSitekey,
       (t) => !cancelled && setToken(t),
-      () => !cancelled && setToken(''),
+      () => !cancelled && setToken('')
     ).catch(() => {
       /* if Turnstile fails to load, don't hard-block booking */
       if (!cancelled) setToken('turnstile-unavailable');
@@ -154,6 +155,9 @@ export function BookDemoForm(props: BookDemoFormProps) {
       setSubmitting(false);
       return;
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- GTM dataLayer
+    const w = window as any;
+    (w.dataLayer = w.dataLayer || []).push({ event: 'generate_lead', form_name: 'book-a-demo' });
     try {
       await submitAndOpen(routerId, values);
     } catch {
@@ -211,7 +215,12 @@ export function BookDemoForm(props: BookDemoFormProps) {
             {(handoff ? STEPS.slice(1) : STEPS).map((_, i) => {
               const active = handoff ? step - 1 : step;
               return (
-                <span key={i} className={'bd__dot' + (i < active ? ' is-done' : i === active ? ' is-active' : '')} />
+                <span
+                  key={i}
+                  className={
+                    'bd__dot' + (i < active ? ' is-done' : i === active ? ' is-active' : '')
+                  }
+                />
               );
             })}
           </div>
@@ -225,17 +234,27 @@ export function BookDemoForm(props: BookDemoFormProps) {
             const err = showErrors ? fieldError(f, values[f.name]) : null;
             return (
               <div className="bd__field" key={f.name}>
-                <label className="bd__label" htmlFor={`bd-${f.name}`}>{f.label}</label>
+                <label className="bd__label" htmlFor={`bd-${f.name}`}>
+                  {f.label}
+                </label>
                 {f.type === 'select' ? (
                   <select
                     id={`bd-${f.name}`}
-                    className={'bd__control' + (values[f.name] ? ' has-value' : '') + (err ? ' has-error' : '')}
+                    className={
+                      'bd__control' +
+                      (values[f.name] ? ' has-value' : '') +
+                      (err ? ' has-error' : '')
+                    }
                     value={values[f.name]}
                     onChange={(e) => set(f.name, e.target.value)}
                   >
-                    <option value="" disabled>Select one</option>
+                    <option value="" disabled>
+                      Select one
+                    </option>
                     {f.options!.map((o) => (
-                      <option key={o} value={o}>{o}</option>
+                      <option key={o} value={o}>
+                        {o}
+                      </option>
                     ))}
                   </select>
                 ) : (
@@ -262,11 +281,19 @@ export function BookDemoForm(props: BookDemoFormProps) {
 
         <div className={'bd__actions' + (step === (handoff ? 1 : 0) ? ' is-first' : '')}>
           {step > (handoff ? 1 : 0) ? (
-            <button type="button" className="bd__btn bd__btn--ghost" onClick={() => setStep((s) => s - 1)}>
+            <button
+              type="button"
+              className="bd__btn bd__btn--ghost"
+              onClick={() => setStep((s) => s - 1)}
+            >
               Back
             </button>
           ) : null}
-          <button type="submit" className="bd__btn bd__btn--primary" disabled={isLast ? !canSubmit : false}>
+          <button
+            type="submit"
+            className="bd__btn bd__btn--primary"
+            disabled={isLast ? !canSubmit : false}
+          >
             {submitting ? 'Submitting…' : isLast ? submitLabel : nextLabel}
           </button>
         </div>

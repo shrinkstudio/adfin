@@ -11,6 +11,7 @@ import { hubspotForms } from './hubspotForms';
 import { progressTab } from './progressTab';
 import { rotatingTitle } from './rotatingTitle';
 import { toc } from './toc';
+import { tracking } from './tracking';
 import { transition } from './transition';
 import { uiScreenshot } from './uiScreenshot';
 import { videoControls } from './videoControls';
@@ -30,6 +31,7 @@ export const components = (): void => {
   progressTab();
   rotatingTitle();
   toc();
+  tracking();
   transition();
   uiScreenshot();
   videoControls();
