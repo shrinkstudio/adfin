@@ -13,6 +13,7 @@ import { getStyleValue } from '$utils/style';
 /** Finsweet builds this markup — we only add the active-on-scroll behaviour. */
 const TOC_COMPONENT = '.toc_component';
 const TOC_LINK = '[fs-toc-element="link"]';
+const TOC_CONTENTS = '[fs-toc-element="contents"]';
 const ACTIVE_CLASS = 'is-active';
 
 /**
@@ -264,6 +265,52 @@ const createToc = (component: HTMLElement): Destroyable => {
   };
 };
 
+const slugify = (text: string): string =>
+  text
+    .toLowerCase()
+    .replace(/['’]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+/**
+ * Finsweet's TOC only ever starts at H2, and the article/blog bodies use H3
+ * section headings — so it renders nothing. When a TOC comes back empty we
+ * build the same markup ourselves from the contents region's headings.
+ */
+const buildTocLinks = (component: HTMLElement): number => {
+  const linksList = queryElement<HTMLElement>(attributeSelector('toc', 'links'), component);
+  const contents = queryElement<HTMLElement>(TOC_CONTENTS);
+  if (!linksList || !contents || linksList.querySelector(TOC_LINK)) return 0;
+
+  const offsetTop = contents.getAttribute('fs-toc-offsettop');
+  const headings = queryElements<HTMLElement>('h2, h3', contents);
+
+  for (const heading of headings) {
+    if (!heading.id) {
+      let id = slugify(heading.textContent ?? '');
+      if (!id) continue;
+      let n = 2;
+      while (document.getElementById(id)) id = `${slugify(heading.textContent ?? '')}-${n++}`;
+      heading.id = id;
+    }
+    if (offsetTop) heading.style.scrollMarginTop = offsetTop;
+
+    // Mirrors the Designer's link template that Finsweet consumes on load.
+    const item = document.createElement('div');
+    item.setAttribute('role', 'listitem');
+    item.className = 'toc_item';
+    const link = document.createElement('a');
+    link.setAttribute('data-trigger', 'hover focus');
+    link.setAttribute('fs-toc-element', 'link');
+    link.href = `#${heading.id}`;
+    link.className = 'toc_link';
+    link.textContent = heading.textContent?.trim() ?? '';
+    item.appendChild(link);
+    linksList.appendChild(item);
+  }
+  return headings.length;
+};
+
 /**
  * Waits for the Finsweet TOC solution to build the markup, then initialises
  * every TOC on the page (one instance each).
@@ -277,9 +324,20 @@ export const toc = (): void => {
   // Auto TOCs get their links injected by Finsweet; wait for it, then init the
   // rest. The WeakSet guard keeps this from re-initialising anything above.
   log('waiting for finsweet toc…');
-  onFinsweetAttribute('toc', () => {
+  let initialisedAuto = false;
+  const initAuto = (source: string): void => {
+    if (initialisedAuto) return;
+    initialisedAuto = true;
+    queryElements<HTMLElement>(AUTO_TOC_COMPONENT).forEach((component) => {
+      const built = buildTocLinks(component);
+      if (built) log(`built ${built} link(s) ourselves (${source})`);
+    });
     const found = queryElements(AUTO_TOC_COMPONENT);
-    log(`finsweet toc ready: found ${found.length} auto TOC(s)`);
+    log(`auto TOC init (${source}): found ${found.length}`);
     createInstances(AUTO_TOC_COMPONENT, createToc);
-  });
+  };
+  onFinsweetAttribute('toc', () => initAuto('finsweet ready'));
+  // Finsweet renders nothing for H3-only bodies (its TOC hard-starts at H2),
+  // and may not load at all — either way, build after a short grace period.
+  window.setTimeout(() => initAuto('fallback timer'), 2500);
 };
