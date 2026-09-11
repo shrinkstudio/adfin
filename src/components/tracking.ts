@@ -38,11 +38,7 @@ const trackDemoIntent = (): void => {
     const link = (e.target as HTMLElement | null)?.closest<HTMLAnchorElement>('a[href]');
     if (!link) return;
     const href = link.getAttribute('href') ?? '';
-    if (
-      /^\/demo\//.test(href) ||
-      href.includes('/demo/book-a-demo') ||
-      href.includes('/demo/demo-form')
-    )
+    if (/^\/(?:demo\/|book-demo$|book-a-demo$|demo-form$)/.test(href))
       push('book_a_demo_click', { link_url: href });
   });
 };

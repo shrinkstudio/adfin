@@ -20,7 +20,7 @@ const log = createLogger('emailHandoff');
  * demo form can pre-fill it and open on step 2, then navigates once the
  * submission confirms. Nothing sensitive touches the URL.
  */
-const DEFAULT_DESTINATION = '/demo/demo-form';
+const DEFAULT_DESTINATION = '/demo-form';
 
 const createEmailHandoff = (wrap: HTMLElement): Destroyable | null => {
   const form = wrap instanceof HTMLFormElement ? wrap : wrap.querySelector('form');
