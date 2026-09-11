@@ -35,6 +35,13 @@ const createEmailHandoff = (wrap: HTMLElement): Destroyable | null => {
   const cleanup = createCleanup();
   let submitted = false;
 
+  let redirected = false;
+  const go = (): void => {
+    if (redirected) return;
+    redirected = true;
+    window.location.assign(destination);
+  };
+
   cleanup.add(
     on(form, 'submit', () => {
       const email = input.value.trim();
@@ -45,6 +52,11 @@ const createEmailHandoff = (wrap: HTMLElement): Destroyable | null => {
       } catch {
         /* storage unavailable — the redirect still happens, just without pre-fill */
       }
+      // The demo form is the real capture point, so the visitor moves on even
+      // when Webflow's own submission fails (its endpoint has 422'd site-wide
+      // before). Success just makes the redirect immediate.
+      const fallback = window.setTimeout(go, 1800);
+      cleanup.add(() => window.clearTimeout(fallback));
     })
   );
 
@@ -56,7 +68,7 @@ const createEmailHandoff = (wrap: HTMLElement): Destroyable | null => {
     const observer = new MutationObserver(() => {
       if (!submitted || success.style.display !== 'block') return;
       observer.disconnect();
-      window.location.assign(destination);
+      go();
     });
     observer.observe(success, { attributes: true, attributeFilter: ['style'] });
     cleanup.add(() => observer.disconnect());
