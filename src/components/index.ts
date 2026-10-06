@@ -6,6 +6,7 @@ import { customerLogos } from './customerLogos';
 import { duoTab } from './duoTab';
 import { emailHandoff } from './emailHandoff';
 import { eventMap } from './eventMap';
+import { faqSearch } from './faqSearch';
 import { hubMap } from './hubMap';
 import { hubspotForms } from './hubspotForms';
 import { progressTab } from './progressTab';
@@ -26,6 +27,7 @@ export const components = (): void => {
   duoTab();
   emailHandoff();
   eventMap();
+  faqSearch();
   hubMap();
   hubspotForms();
   progressTab();
