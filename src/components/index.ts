@@ -6,6 +6,7 @@ import { customerLogos } from './customerLogos';
 import { duoTab } from './duoTab';
 import { emailHandoff } from './emailHandoff';
 import { eventMap } from './eventMap';
+import { faqSchema } from './faqSchema';
 import { faqSearch } from './faqSearch';
 import { hubMap } from './hubMap';
 import { hubspotForms } from './hubspotForms';
@@ -28,6 +29,7 @@ export const components = (): void => {
   duoTab();
   emailHandoff();
   eventMap();
+  faqSchema();
   faqSearch();
   hubMap();
   hubspotForms();
