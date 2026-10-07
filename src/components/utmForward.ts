@@ -8,11 +8,14 @@ const STORAGE_KEY = 'adfin:attribution';
 const MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
 const CONSOLE_HOST = 'console.adfin.com';
 
-/** utm_* is matched by prefix; these are the ad-platform click ids. */
+/** utm_* and hsa_* (HubSpot Ads) are matched by prefix; these are the
+ * ad-platform click ids. */
 const CLICK_IDS = ['gclid', 'fbclid', 'msclkid', 'li_fat_id', 'ttclid'];
 
-const isTracked = (key: string): boolean =>
-  key.toLowerCase().startsWith('utm_') || CLICK_IDS.includes(key.toLowerCase());
+const isTracked = (key: string): boolean => {
+  const k = key.toLowerCase();
+  return k.startsWith('utm_') || k.startsWith('hsa_') || CLICK_IDS.includes(k);
+};
 
 type Stored = { ts: number; params: Record<string, string> };
 
