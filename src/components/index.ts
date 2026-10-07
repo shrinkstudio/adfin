@@ -15,6 +15,7 @@ import { toc } from './toc';
 import { tracking } from './tracking';
 import { transition } from './transition';
 import { uiScreenshot } from './uiScreenshot';
+import { utmForward } from './utmForward';
 import { videoControls } from './videoControls';
 import { wheel } from './wheel';
 
@@ -36,6 +37,7 @@ export const components = (): void => {
   tracking();
   transition();
   uiScreenshot();
+  utmForward();
   videoControls();
   wheel();
 };
