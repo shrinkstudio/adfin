@@ -3,48 +3,62 @@ import { createLogger } from '$utils/log';
 
 const log = createLogger('changelogVideo');
 
-/** CMS-bound data carrier inside each changelog card (empty when no clip). */
-const SOURCE = '[data-changelog-video]';
+/** Videos that lazy-load: src held in data-video-src until near the viewport. */
+const SOURCE = 'video[data-video-src]';
+const CARD = '.changelog_card';
+const IMAGE = '.u-image-wrapper img';
 /* load clips this far before they scroll into view */
 const ROOT_MARGIN = '400px';
 
 /**
- * Gif-style video for changelog cards. Each card carries a hidden div whose
- * data-changelog-video attribute is CMS-bound to a hosted MP4 URL. The module
- * overlays a muted looping video on the card's Main Image: the image keeps
- * doing the layout work and stays as the poster/fallback, the video fades in
- * only once it is actually playing. Clips load near the viewport and pause
- * off-screen, so cards with videos cost nothing until scrolled to. Reduced
- * motion keeps the static image.
+ * Gif-style lazy video for changelog cards. Each card holds a native <video>
+ * (hidden by default, data-video-src CMS-bound to a hosted MP4) next to the
+ * Main Image. The image does the poster work: it stays visible until the clip
+ * is genuinely playing, then the module swaps the two. src is only applied
+ * near the viewport and playback pauses off-screen, so cards cost nothing
+ * until scrolled to. No JS, reduced motion, autoplay refusal or a dead clip
+ * URL all leave the image exactly as it was.
  */
 export const changelogVideo = (): void => {
-  const sources = Array.from(document.querySelectorAll<HTMLElement>(SOURCE));
-  if (!sources.length) return;
+  const videos = Array.from(document.querySelectorAll<HTMLVideoElement>(SOURCE)).filter((v) =>
+    (v.dataset.videoSrc || '').trim()
+  );
+  if (!videos.length) return;
 
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    sources.forEach((el) => el.remove());
-    return;
-  }
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  let armed = 0;
+  const swapped = new WeakSet<HTMLVideoElement>();
 
-  const entriesByVideo = new Map<Element, { url: string; loaded: boolean }>();
+  const reveal = (video: HTMLVideoElement): void => {
+    if (swapped.has(video)) return;
+    swapped.add(video);
+    video.style.display = 'block';
+    const img = video.closest(CARD)?.querySelector<HTMLElement>(IMAGE);
+    if (img) img.style.display = 'none';
+  };
+
+  // The video itself is display: none until it plays, which gives it no box
+  // for IntersectionObserver — so the card is what gets observed.
+  const videoByCard = new Map<Element, HTMLVideoElement>();
 
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach(({ target, isIntersecting }) => {
-        const video = target as HTMLVideoElement;
-        const state = entriesByVideo.get(video);
-        if (!state) return;
+        const video = videoByCard.get(target);
+        if (!video) return;
         if (isIntersecting) {
-          if (!state.loaded) {
-            state.loaded = true;
-            video.src = state.url;
+          if (!video.src) {
+            video.src = (video.dataset.videoSrc || '').trim();
+            on(video, 'playing', () => reveal(video));
+            on(video, 'error', () => {
+              log('clip failed, image kept', video.dataset.videoSrc);
+            });
           }
+          video.muted = true;
           video.play().catch(() => {
-            /* autoplay refused — the image is still there */
+            /* autoplay refused — the image is still showing */
           });
-        } else if (state.loaded) {
+        } else if (video.src) {
           video.pause();
         }
       });
@@ -52,46 +66,11 @@ export const changelogVideo = (): void => {
     { rootMargin: ROOT_MARGIN }
   );
 
-  sources.forEach((source) => {
-    const url = source.getAttribute('data-changelog-video')?.trim();
-    const card = source.closest<HTMLElement>('.changelog_card') || source.parentElement;
-    source.remove();
-    if (!url || !card) return;
-
-    const img = card.querySelector<HTMLImageElement>('.u-image-wrapper img');
-    const wrapper = img?.closest<HTMLElement>('.u-image-wrapper');
-    if (!img || !wrapper) return;
-
-    const video = document.createElement('video');
-    video.muted = true;
-    video.loop = true;
-    video.autoplay = false;
-    video.playsInline = true;
-    video.preload = 'none';
-    video.setAttribute('muted', '');
-    video.setAttribute('playsinline', '');
-    video.setAttribute('aria-hidden', 'true');
-    video.tabIndex = -1;
-    video.style.cssText =
-      'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.3s ease;pointer-events:none;';
-
-    const wrapperPosition = window.getComputedStyle(wrapper).position;
-    if (wrapperPosition === 'static') wrapper.style.position = 'relative';
-
-    on(video, 'playing', () => {
-      video.style.opacity = '1';
-    });
-    on(video, 'error', () => {
-      observer.unobserve(video);
-      video.remove();
-      log('clip failed, image kept', url);
-    });
-
-    wrapper.appendChild(video);
-    entriesByVideo.set(video, { url, loaded: false });
-    observer.observe(video);
-    armed += 1;
+  videos.forEach((video) => {
+    const card = video.closest(CARD) || video.parentElement;
+    if (!card) return;
+    videoByCard.set(card, video);
+    observer.observe(card);
   });
-
-  if (armed) log('armed', { clips: armed });
+  log('armed', { clips: videoByCard.size });
 };
