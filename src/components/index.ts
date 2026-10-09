@@ -2,6 +2,7 @@ import { anchorId } from './anchorId';
 import { anchorLinks } from './anchorLinks';
 import { anchorScroll } from './anchorScroll';
 import { askAi } from './askAi';
+import { changelogVideo } from './changelogVideo';
 import { customerLogos } from './customerLogos';
 import { duoTab } from './duoTab';
 import { emailHandoff } from './emailHandoff';
@@ -25,6 +26,7 @@ export const components = (): void => {
   anchorLinks();
   anchorScroll();
   askAi();
+  changelogVideo();
   customerLogos();
   duoTab();
   emailHandoff();
