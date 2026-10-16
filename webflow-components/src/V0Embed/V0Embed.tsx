@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 
 export interface V0EmbedProps {
   sourceUrl?: string;
   title?: string;
   aspectRatio?: string;
+  aspectRatioMobile?: string;
   maxWidth?: string;
   mountMargin?: string;
   posterUrl?: string;
@@ -25,6 +26,7 @@ export const V0Embed = ({
   sourceUrl = '',
   title = 'UI animation',
   aspectRatio = '16/10',
+  aspectRatioMobile = '',
   maxWidth = '620px',
   mountMargin = '600px',
   posterUrl = '',
@@ -60,15 +62,26 @@ export const V0Embed = ({
   return (
     <div
       ref={containerRef}
-      style={{
-        width: '100%',
-        maxWidth,
-        aspectRatio,
-        margin: '0 auto',
-        overflow: 'hidden',
-        position: 'relative',
-      }}
+      className="v0-shell"
+      style={
+        {
+          width: '100%',
+          maxWidth,
+          margin: '0 auto',
+          overflow: 'hidden',
+          position: 'relative',
+          /* ratio lives in vars so the media query can switch it */
+          '--v0-ar': aspectRatio,
+          '--v0-ar-mobile': aspectRatioMobile || aspectRatio,
+        } as CSSProperties
+      }
     >
+      <style>{`
+        .v0-shell { aspect-ratio: var(--v0-ar); }
+        @media (max-width: 767px) {
+          .v0-shell { aspect-ratio: var(--v0-ar-mobile); }
+        }
+      `}</style>
       {posterUrl ? (
         <img
           src={posterUrl}

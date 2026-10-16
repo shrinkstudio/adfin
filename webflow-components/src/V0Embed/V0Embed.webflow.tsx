@@ -11,6 +11,7 @@ export default declareComponent(V0Embed, {
     sourceUrl: props.Text({ name: 'Source URL', defaultValue: '' }),
     title: props.Text({ name: 'Title (accessibility)', defaultValue: 'UI animation' }),
     aspectRatio: props.Text({ name: 'Aspect ratio', defaultValue: '16/10' }),
+    aspectRatioMobile: props.Text({ name: 'Aspect ratio (mobile)', defaultValue: '' }),
     maxWidth: props.Text({ name: 'Max width', defaultValue: '620px' }),
     mountMargin: props.Text({ name: 'Mount margin', defaultValue: '600px' }),
     posterUrl: props.Text({ name: 'Poster image URL', defaultValue: '' }),
