@@ -40,8 +40,10 @@ export const navHover = (): void => {
     pill.setAttribute('aria-hidden', 'true');
     list.prepend(pill);
 
-    if (getComputedStyle(list).position === 'static') list.style.position = 'relative';
-
+    // The list must NOT be given position: relative — it has overflow: auto,
+    // and becoming the containing block clips the nav's absolutely positioned
+    // mega dropdown panels into it (took the nav down on 2026-10-21). The pill
+    // is measured against whatever positioned ancestor it naturally lands in.
     gsap.set(pill, {
       position: 'absolute',
       top: 0,
@@ -70,11 +72,12 @@ export const navHover = (): void => {
 
     const slideTo = (item: HTMLElement) => {
       const target = item.querySelector<HTMLElement>(LINK) || item;
+      const anchor = (pill.offsetParent as HTMLElement | null) || list;
       const box = target.getBoundingClientRect();
-      const root = list.getBoundingClientRect();
+      const root = anchor.getBoundingClientRect();
       const to = {
-        x: box.left - root.left - list.clientLeft,
-        y: box.top - root.top - list.clientTop,
+        x: box.left - root.left - anchor.clientLeft,
+        y: box.top - root.top - anchor.clientTop,
         width: box.width,
         height: box.height,
       };
