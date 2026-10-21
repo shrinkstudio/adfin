@@ -11,6 +11,7 @@ import { faqSchema } from './faqSchema';
 import { faqSearch } from './faqSearch';
 import { hubMap } from './hubMap';
 import { hubspotForms } from './hubspotForms';
+import { navHover } from './navHover';
 import { progressTab } from './progressTab';
 import { rotatingTitle } from './rotatingTitle';
 import { toc } from './toc';
@@ -35,6 +36,7 @@ export const components = (): void => {
   faqSearch();
   hubMap();
   hubspotForms();
+  navHover();
   progressTab();
   rotatingTitle();
   toc();
