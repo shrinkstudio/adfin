@@ -76,12 +76,17 @@ export const V0Embed = ({
         } as CSSProperties
       }
     >
-      <style>{`
+      {/* raw CSS: text children get escaped on SSR and fail hydration (#425) */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
         .v0-shell { aspect-ratio: var(--v0-ar); }
         @media (max-width: 767px) {
           .v0-shell { aspect-ratio: var(--v0-ar-mobile); }
         }
-      `}</style>
+      `,
+        }}
+      />
       {posterUrl ? (
         <img
           src={posterUrl}

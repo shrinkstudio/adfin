@@ -114,7 +114,8 @@ export function PricingCalculator(props: PricingCalculatorProps) {
 
   return (
     <div className={'calc' + (theme === 'light' ? ' theme-light' : '')}>
-      <style>{css}</style>
+      {/* raw CSS: text children get &quot; escaped on SSR and fail hydration (#425) */}
+      <style dangerouslySetInnerHTML={{ __html: css }} />
 
       {/* Your volumes */}
       <section className="card">

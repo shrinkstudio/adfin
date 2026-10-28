@@ -172,7 +172,8 @@ export function BookDemoForm(props: BookDemoFormProps) {
   if (done) {
     return (
       <div className={rootClass}>
-        <style>{css}</style>
+        {/* raw CSS: text children get &quot; escaped on SSR and fail hydration (#425) */}
+        <style dangerouslySetInnerHTML={{ __html: css }} />
         <div className="bd__card">
           <div className="bd__success">
             <h3>{successHeading}</h3>
@@ -185,7 +186,8 @@ export function BookDemoForm(props: BookDemoFormProps) {
 
   return (
     <div className={rootClass}>
-      <style>{css}</style>
+      {/* raw CSS: text children get &quot; escaped on SSR and fail hydration (#425) */}
+      <style dangerouslySetInnerHTML={{ __html: css }} />
       <form className="bd__card" onSubmit={handlePrimary} noValidate>
         <div className="bd__head">
           <h2 className="bd__title">{heading}</h2>
