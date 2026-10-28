@@ -23,7 +23,7 @@ export interface StepDef {
 export const TERRITORIES = [
   'South West', 'North West', 'East of England', 'London', 'South East',
   'West Midlands', 'Yorkshire and the Humber', 'East Midlands', 'Scotland',
-  'North East', 'Wales', 'Channel Islands',
+  'North East', 'Wales', 'Northern Ireland', 'Channel Islands', 'Other',
 ];
 
 export const NUM_EMPLOYEES = ['1-5', '5-25', '25-50', '50-100', '100-500', '500-1000', '1000+'];
