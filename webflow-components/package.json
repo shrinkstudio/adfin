@@ -9,7 +9,7 @@
     "bundle": "webflow devlink bundle",
     "embed-fonts": "node scripts/embed-fonts.mjs",
     "check": "tsc --noEmit",
-    "test": "node --experimental-strip-types tests/calc.test.ts"
+    "test": "node --experimental-strip-types tests/calc.test.ts && node --experimental-strip-types tests/currency.test.ts"
   },
   "devDependencies": {
     "@webflow/data-types": "latest",

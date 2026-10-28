@@ -36,5 +36,21 @@ export default declareComponent(PricingCalculator, {
     defaultCardSplit: props.Number({ name: 'Default card split (%)', defaultValue: 30 }),
     defaultDdSplit: props.Number({ name: 'Default direct debit split (%)', defaultValue: 70 }),
     showBank: props.Boolean({ name: 'Show bank payments row', defaultValue: false }),
+
+    // Currency: Auto follows the page locale (Ireland -> EUR, United States -> USD, UK -> GBP)
+    currency: props.Variant({ name: 'Currency', options: ['auto', 'GBP', 'EUR', 'USD'], defaultValue: 'auto' }),
+
+    // Euro amounts (percentage rates are shared with GBP)
+    fixedFeeEur: props.Number({ name: 'EUR fixed fee (€)', defaultValue: 0.2 }),
+    ddCapEur: props.Number({ name: 'EUR direct debit cap (€)', defaultValue: 4.0 }),
+    bankCapEur: props.Number({ name: 'EUR bank cap (€)', defaultValue: 4.0 }),
+    warningThresholdEur: props.Number({ name: 'EUR high-volume threshold (€)', defaultValue: 200000 }),
+
+    // US dollar amounts
+    fixedFeeUsd: props.Number({ name: 'USD fixed fee ($)', defaultValue: 0.2 }),
+    ddCapUsd: props.Number({ name: 'USD direct debit cap ($)', defaultValue: 4.0 }),
+    bankCapUsd: props.Number({ name: 'USD bank cap ($)', defaultValue: 4.0 }),
+    warningThresholdUsd: props.Number({ name: 'USD high-volume threshold ($)', defaultValue: 200000 }),
+    ddLabelUsd: props.Text({ name: 'USD label for direct debit', defaultValue: 'Direct debit' }),
   },
 });

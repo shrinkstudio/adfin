@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react';
+import { useWebflowContext } from '@webflow/react';
 import { computeQuote, type QuoteInput, type Rates } from './calc';
+import { CURRENCIES, currencyForLocale, formatMoney, type CurrencyCode } from './currency';
 import { css } from './styles';
 
 export interface PricingCalculatorProps {
@@ -26,10 +28,28 @@ export interface PricingCalculatorProps {
   defaultCardSplit?: number; // %
   defaultDdSplit?: number; // %
   showBank?: boolean;
+  // Currency: 'auto' follows the Webflow locale (en-IE -> EUR, en-US -> USD)
+  currency?: 'auto' | CurrencyCode;
+  // Per-currency amounts; the percentage rates above are shared
+  fixedFeeEur?: number;
+  ddCapEur?: number;
+  bankCapEur?: number;
+  warningThresholdEur?: number;
+  fixedFeeUsd?: number;
+  ddCapUsd?: number;
+  bankCapUsd?: number;
+  warningThresholdUsd?: number;
+  ddLabelUsd?: string;
 }
 
-const money = (n: number) =>
-  '£' + n.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+/* the hook throws outside the Webflow runtime (local tests, previews) */
+function useLocale(): string | undefined {
+  try {
+    return useWebflowContext()?.locale ?? undefined;
+  } catch {
+    return undefined;
+  }
+}
 
 const num = (s: string): number | null => {
   if (s.trim() === '') return null;
@@ -61,7 +81,28 @@ export function PricingCalculator(props: PricingCalculatorProps) {
     defaultCardSplit = 30,
     defaultDdSplit = 70,
     showBank = false,
+    currency = 'auto',
+    fixedFeeEur = 0.2,
+    ddCapEur = 4.0,
+    bankCapEur = 4.0,
+    warningThresholdEur = 200000,
+    fixedFeeUsd = 0.2,
+    ddCapUsd = 4.0,
+    bankCapUsd = 4.0,
+    warningThresholdUsd = 200000,
+    ddLabelUsd = 'Direct debit',
   } = props;
+
+  const locale = useLocale();
+  const code: CurrencyCode = currency === 'auto' ? currencyForLocale(locale) : currency;
+  const sym = CURRENCIES[code].symbol;
+  const money = (n: number) => formatMoney(n, code);
+  const amounts = {
+    GBP: { fixed: fixedFee, ddCap, bankCap, threshold: warningThreshold },
+    EUR: { fixed: fixedFeeEur, ddCap: ddCapEur, bankCap: bankCapEur, threshold: warningThresholdEur },
+    USD: { fixed: fixedFeeUsd, ddCap: ddCapUsd, bankCap: bankCapUsd, threshold: warningThresholdUsd },
+  }[code];
+  const ddLabel = code === 'USD' ? ddLabelUsd : 'Direct debit';
 
   // Inputs (kept as strings so blanks stay blank — matches the live "all blank
   // -> default split" behaviour).
@@ -81,16 +122,16 @@ export function PricingCalculator(props: PricingCalculatorProps) {
 
   const rates: Rates = useMemo(
     () => ({
-      card: { pct: cardRate / 100, fixed: fixedFee, cap: 0 },
+      card: { pct: cardRate / 100, fixed: amounts.fixed, cap: 0 },
       ddBase: ddBaseRate / 100,
-      ddFixed: fixedFee,
-      ddCap,
-      bank: { pct: bankRate / 100, fixed: fixedFee, cap: bankCap },
+      ddFixed: amounts.fixed,
+      ddCap: amounts.ddCap,
+      bank: { pct: bankRate / 100, fixed: amounts.fixed, cap: amounts.bankCap },
       referralTiers: { t21: ddRateTier3 / 100, t9: ddRateTier2 / 100, t1: ddRateTier1 / 100 },
-      warningThreshold,
+      warningThreshold: amounts.threshold,
       defaultSplit: { card: defaultCardSplit, dd: defaultDdSplit, bank: 0 },
     }),
-    [cardRate, ddBaseRate, fixedFee, ddCap, bankRate, bankCap, ddRateTier1, ddRateTier2, ddRateTier3, warningThreshold, defaultCardSplit, defaultDdSplit],
+    [cardRate, ddBaseRate, amounts.fixed, amounts.ddCap, bankRate, amounts.bankCap, ddRateTier1, ddRateTier2, ddRateTier3, amounts.threshold, defaultCardSplit, defaultDdSplit],
   );
 
   const result = useMemo(() => {
@@ -128,7 +169,7 @@ export function PricingCalculator(props: PricingCalculatorProps) {
         </div>
 
         <div className="field">
-          <label className="field__label">Total value (£) of payments per month</label>
+          <label className="field__label">Total value ({sym}) of payments per month</label>
           <input className="control" type="number" min="0" placeholder="Enter a number" autoComplete="off" value={volume} onChange={(e) => setVolume(e.target.value)} />
         </div>
 
@@ -178,8 +219,8 @@ export function PricingCalculator(props: PricingCalculatorProps) {
             <tr>
               <th></th>
               <th>% transaction fee</th>
-              <th>£ transaction fee</th>
-              <th>Fee cap (£)</th>
+              <th>{sym} transaction fee</th>
+              <th>Fee cap ({sym})</th>
               <th>% of your volume</th>
             </tr>
           </thead>
@@ -187,15 +228,15 @@ export function PricingCalculator(props: PricingCalculatorProps) {
             <tr>
               <th>Card payments</th>
               <td data-label="% transaction fee"><input className="control cell-input" type="number" placeholder="1.5" autoComplete="off" value={exPctCard} onChange={(e) => setExPctCard(e.target.value)} /></td>
-              <td data-label="£ transaction fee"><input className="control cell-input" type="number" placeholder="0.2" autoComplete="off" value={exFixedCard} onChange={(e) => setExFixedCard(e.target.value)} /></td>
-              <td data-label="Fee cap (£)"><span className="cell-na">N/A</span></td>
+              <td data-label={`${sym} transaction fee`}><input className="control cell-input" type="number" placeholder="0.2" autoComplete="off" value={exFixedCard} onChange={(e) => setExFixedCard(e.target.value)} /></td>
+              <td data-label={`Fee cap (${sym})`}><span className="cell-na">N/A</span></td>
               <td data-label="% of your volume"><input className="control cell-input" type="number" placeholder="30" autoComplete="off" value={cardPct} onChange={(e) => setCardPct(e.target.value)} /></td>
             </tr>
             <tr>
-              <th>Direct debit payments</th>
+              <th>{ddLabel} payments</th>
               <td data-label="% transaction fee"><input className="control cell-input" type="number" placeholder="1.25" autoComplete="off" value={exPctDd} onChange={(e) => setExPctDd(e.target.value)} /></td>
-              <td data-label="£ transaction fee"><input className="control cell-input" type="number" placeholder="0.2" autoComplete="off" value={exFixedDd} onChange={(e) => setExFixedDd(e.target.value)} /></td>
-              <td data-label="Fee cap (£)"><input className="control cell-input" type="number" placeholder="5" autoComplete="off" value={exCapDd} onChange={(e) => setExCapDd(e.target.value)} /></td>
+              <td data-label={`${sym} transaction fee`}><input className="control cell-input" type="number" placeholder="0.2" autoComplete="off" value={exFixedDd} onChange={(e) => setExFixedDd(e.target.value)} /></td>
+              <td data-label={`Fee cap (${sym})`}><input className="control cell-input" type="number" placeholder="5" autoComplete="off" value={exCapDd} onChange={(e) => setExCapDd(e.target.value)} /></td>
               <td data-label="% of your volume"><input className="control cell-input" type="number" placeholder="70" autoComplete="off" value={ddPct} onChange={(e) => setDdPct(e.target.value)} /></td>
             </tr>
           </tbody>
@@ -222,7 +263,7 @@ export function PricingCalculator(props: PricingCalculatorProps) {
             <div className="result-breakdown">
               Card: {money(result.perMethod.card.exist)}
               <br />
-              Direct debit: {money(result.perMethod.dd.exist)}
+              {ddLabel}: {money(result.perMethod.dd.exist)}
             </div>
           </div>
         </div>
