@@ -15,7 +15,7 @@ Read this first in every session. It points to the rest of the brain and sets th
 - Adfin (adfin.com), a payments and credit-control platform. Shrink rebuilt the site, Greg built the structure, and the clients are Karol and Tom.
 - Webflow site `6a69cb89a361f85b63b37d60` on Lumos. Locales: en-GB primary, en-IE `/ie`, en-US `/us` (publishing off until launch).
 - Figma "Adfin / July 2026" `XTzsrBUInVH9Rk4UbqvwJd`, Components page `10505:21523`, Nav set `10520:440`.
-- Bundle: this repo, built on the `production` branch by CI and served by jsDelivr. Code components live in `webflow-components/` (`npm run import`, library "Adfin Tools").
+- Bundle: this repo, built on the `production` branch by CI and served by jsDelivr. Since 29 Oct the site head loader pins `PROD_URL` to a build commit (`@<sha>`), because `@production` stayed stale for hours after purges. After each push, bump that sha in Site settings > Custom code to `git log -1 origin/production`, then publish. Code components live in `webflow-components/` (`npm run import`, library "Adfin Tools").
 - Nav Links CMS collection `6ae394e1b9a37c76bf124bcb` (nav content, see `NAV-PLAN.md`).
 - CMS Data API token: `SYNC_WEBFLOW_TOKEN` in `adfin-sync/.env` (never print it).
 
