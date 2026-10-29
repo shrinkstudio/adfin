@@ -102,7 +102,8 @@ const buildGroups = (root: HTMLElement, panel: HTMLElement): HTMLElement[] => {
     return [];
   }
   const main = panel.querySelector<HTMLElement>('[data-nav-main]') || panel;
-  const aside = panel.querySelector<HTMLElement>('[data-nav-aside]') || main;
+  // CMS items carry data-nav-aside too (their Column value), so skip them here
+  const aside = panel.querySelector<HTMLElement>(`[data-nav-aside]:not(${ITEM})`) || main;
   const isAside = (item: HTMLElement) =>
     isOn(item.getAttribute('data-nav-aside')) ||
     !!item.querySelector('[data-nav-aside-flag]:not(.w-condition-invisible)');
