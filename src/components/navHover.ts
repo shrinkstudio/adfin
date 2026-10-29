@@ -29,6 +29,8 @@ export const navHover = (): void => {
   const { gsap } = window;
   const hoverable = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   if (!gsap || !hoverable) return;
+  // reduced motion: no slide or scale, the pill just fades in place
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const lists = document.querySelectorAll<HTMLElement>(LIST);
 
@@ -52,7 +54,7 @@ export const navHover = (): void => {
       width: 0,
       height: 0,
       opacity: 0,
-      scale: 0.8,
+      scale: reduced ? 1 : 0.8,
       pointerEvents: 'none',
       // Above the list background, below the links (they sit at z-index 2).
       // Needs the links transparent at rest or they paint over the pill.
@@ -82,7 +84,7 @@ export const navHover = (): void => {
         width: box.width,
         height: box.height,
       };
-      if (hoverBetween) gsap.to(pill, { ...to, duration: 0.3, ease: 'power1.inOut' });
+      if (hoverBetween && !reduced) gsap.to(pill, { ...to, duration: 0.3, ease: 'power1.inOut' });
       else gsap.set(pill, to);
     };
 
