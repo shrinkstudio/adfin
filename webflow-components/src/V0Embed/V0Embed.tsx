@@ -140,6 +140,9 @@ export const V0Embed = ({
     else anim.pause();
   }, [lottieReady, onScreen, reducedMotion, lottieFrame]);
 
+  /* nothing to show: render nothing, so the card can carry the embed unused */
+  if (!sourceUrl && !lottieUrl && !posterUrl) return null;
+
   return (
     <div
       ref={containerRef}
