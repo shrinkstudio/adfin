@@ -8,10 +8,22 @@ export interface V0EmbedProps {
   maxWidth?: string;
   mountMargin?: string;
   posterUrl?: string;
+  lottieUrl?: string;
+  lottieFrame?: number;
+}
+
+/* the slice of lottie-web this component uses */
+interface LottiePlayer {
+  play(): void;
+  pause(): void;
+  goToAndStop(value: number, isFrame?: boolean): void;
+  addEventListener(name: string, cb: () => void): void;
+  destroy(): void;
 }
 
 /**
- * Lazy-mounting iframe shell for the client's V0/Vercel UI animations.
+ * Lazy-mounting shell for the client's UI animations: a V0/Vercel iframe, or a
+ * Lottie when `lottieUrl` is set (the Lottie wins if both are filled in).
  *
  * `loading="lazy"` alone only defers the FIRST load — once booted, an embedded
  * React app animates forever. This shell goes further: the iframe src is only
@@ -21,6 +33,10 @@ export interface V0EmbedProps {
  * Reduced motion never mounts the iframe at all and shows the poster instead —
  * which is also the pre-mount placeholder, so give it the old static
  * screenshot and the page reads correctly in every state.
+ *
+ * Lottie: the player (lottie-web's SVG-only build) is fetched only when a
+ * Lottie card nears the viewport, then kept. It plays while the card is on
+ * screen and pauses off it. Reduced motion shows a still frame (`lottieFrame`).
  */
 export const V0Embed = ({
   sourceUrl = '',
@@ -30,9 +46,16 @@ export const V0Embed = ({
   maxWidth = '620px',
   mountMargin = '600px',
   posterUrl = '',
+  lottieUrl = '',
+  lottieFrame = 0,
 }: V0EmbedProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const lottieRef = useRef<HTMLDivElement>(null);
+  const playerRef = useRef<LottiePlayer | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [onScreen, setOnScreen] = useState(false);
+  const [lottieReady, setLottieReady] = useState(false);
+  const isLottie = !!lottieUrl;
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
@@ -46,7 +69,7 @@ export const V0Embed = ({
 
   useEffect(() => {
     const el = containerRef.current;
-    if (!el || reducedMotion || !sourceUrl) return;
+    if (!el || isLottie || reducedMotion || !sourceUrl) return;
     if (typeof IntersectionObserver === 'undefined') {
       setMounted(true);
       return;
@@ -57,7 +80,65 @@ export const V0Embed = ({
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, [reducedMotion, sourceUrl, mountMargin]);
+  }, [isLottie, reducedMotion, sourceUrl, mountMargin]);
+
+  // Lottie: load once near the viewport, then track whether it's on screen
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || !isLottie) return;
+    if (typeof IntersectionObserver === 'undefined') {
+      setMounted(true);
+      setOnScreen(true);
+      return;
+    }
+    const near = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setMounted(true);
+          near.disconnect();
+        }
+      },
+      { rootMargin: mountMargin }
+    );
+    const visible = new IntersectionObserver((entries) => setOnScreen(entries[0].isIntersecting));
+    near.observe(el);
+    visible.observe(el);
+    return () => {
+      near.disconnect();
+      visible.disconnect();
+    };
+  }, [isLottie, mountMargin]);
+
+  useEffect(() => {
+    if (!isLottie || !mounted || !lottieRef.current) return;
+    let cancelled = false;
+    import('lottie-web/build/player/lottie_light').then(({ default: lottie }) => {
+      if (cancelled || !lottieRef.current) return;
+      const anim = lottie.loadAnimation({
+        container: lottieRef.current,
+        renderer: 'svg',
+        loop: true,
+        autoplay: false,
+        path: lottieUrl,
+      }) as unknown as LottiePlayer;
+      playerRef.current = anim;
+      anim.addEventListener('DOMLoaded', () => setLottieReady(true));
+    });
+    return () => {
+      cancelled = true;
+      playerRef.current?.destroy();
+      playerRef.current = null;
+      setLottieReady(false);
+    };
+  }, [isLottie, mounted, lottieUrl]);
+
+  useEffect(() => {
+    const anim = playerRef.current;
+    if (!anim || !lottieReady) return;
+    if (reducedMotion) anim.goToAndStop(lottieFrame, true);
+    else if (onScreen) anim.play();
+    else anim.pause();
+  }, [lottieReady, onScreen, reducedMotion, lottieFrame]);
 
   return (
     <div
@@ -87,7 +168,7 @@ export const V0Embed = ({
       `,
         }}
       />
-      {posterUrl ? (
+      {posterUrl && !(isLottie && lottieReady) ? (
         <img
           src={posterUrl}
           alt={title}
@@ -100,7 +181,15 @@ export const V0Embed = ({
           }}
         />
       ) : null}
-      {mounted && !reducedMotion && sourceUrl ? (
+      {isLottie ? (
+        <div
+          ref={lottieRef}
+          role="img"
+          aria-label={title}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
+        />
+      ) : null}
+      {!isLottie && mounted && !reducedMotion && sourceUrl ? (
         <iframe
           src={sourceUrl}
           title={title}
