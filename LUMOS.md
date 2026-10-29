@@ -39,7 +39,8 @@ Greg's live classes stay as they are, even where they predate these rules (`nav_
 | Element | Class |
 |---|---|
 | Root, bar | `nav_wrap` (+ `u-theme-brand`), `nav_bar` > `nav_bar_layout` > `nav_bar_logo` |
-| Menu | `nav_menu_list` > `nav_menu_item` > `nav_menu_link` (`nav_menu_text`, `nav_menu_icon`) |
+| Menu | `nav_menu_list` > `nav_menu_item` > `nav_menu_link` (`nav_menu_text u-text-style-small`, `nav_menu_icon` > Phosphor Icon `ph-caret-down`) |
+| Actions | `nav_bar_actions` > Button Main instances (Sign in, Book a demo) + the native Locales element |
 | Panel | `nav_panel_wrap` > `nav_panel_main` + `nav_aside_wrap`; `nav_panel_bg` |
 | Phone | `nav_burger_wrap` > `nav_burger_line` |
 | CMS item | `nav_group_item` |
