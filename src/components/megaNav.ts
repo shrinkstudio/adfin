@@ -11,13 +11,15 @@ declare global {
 }
 
 // Markup (Lumos classes, CSS in Webflow; see NAV-PLAN.md):
-//   [data-nav]                                  nav_component, root
-//     [data-nav-bar]                            nav_desktop_wrap, .is-active once scrolled
-//     [data-nav-toggle="product"]               nav_links_link button, one per menu
-//     [data-nav-panel="product"]                nav_dropdown_mega_layout, one per menu
+//   [data-nav]                                  nav_wrap, root
+//     [data-nav-bar]                            nav_bar, .is-active once scrolled
+//     [data-nav-toggle="product"]               nav_menu_link button, one per menu
+//     [data-nav-panel="product"]                nav_panel_wrap, one per menu
 //       [data-nav-main] / [data-nav-aside]      group columns / right column
-//       [data-nav-item][data-nav-group="…"]     Nav Links CMS items (nav_group_item)
-//         [data-nav-aside-flag]                 visible only when "Right column" is on
+//       [data-nav-item]                         Nav Links CMS items (nav_group_item), with
+//                                               CMS-bound data-nav-group, data-nav-layout
+//                                               (Item|Quick), data-nav-aside (Column:
+//                                               Main|Right column); external links are detected
 //     [data-nav-bg]                             desktop panel background, morphs height
 //     [data-nav-burger] / [data-nav-menu]       phone menu button / menu
 //     .nav_hidden.u-display-none                templates: .nav_group_wrap,
@@ -52,6 +54,38 @@ const EASE = 'power3.out';
 
 const DUR = { open: 0.35, morph: 0.4, close: 0.25, contentIn: 0.3, contentOut: 0.2, stagger: 0.25 };
 
+/* the CMS Column option ("Right column"), or a plain true/on flag */
+const isOn = (value: string | null) => /^(true|on|yes|1|right.*)$/i.test((value || '').trim());
+
+/**
+ * Trims one CMS item down to the markup its fields ask for, so the Designer
+ * needs no conditional visibility: Item or Quick layout, the logo tile when a
+ * logo is set (otherwise the icon tile), and the external arrow and new tab
+ * only for external links.
+ */
+const prepareItem = (item: HTMLElement): void => {
+  const layout = (item.getAttribute('data-nav-layout') || '').trim().toLowerCase();
+  if (layout) {
+    item
+      .querySelectorAll(layout === 'quick' ? '.nav_row_wrap' : '.nav_quick_wrap')
+      .forEach((el) => el.remove());
+  }
+  const logo = item.querySelector<HTMLImageElement>('.nav_row_logo');
+  const hasLogo =
+    !!logo && !logo.classList.contains('w-dyn-bind-empty') && !!logo.getAttribute('src');
+  item.querySelector(hasLogo ? '.nav_row_icon_wrap' : '.nav_row_logo_wrap')?.remove();
+  const link = item.querySelector<HTMLAnchorElement>('a[href]');
+  const external =
+    isOn(item.getAttribute('data-nav-external')) ||
+    (!!link && !!link.hostname && link.hostname !== window.location.hostname);
+  if (!external) item.querySelectorAll('.nav_row_external').forEach((el) => el.remove());
+  else
+    item.querySelectorAll<HTMLAnchorElement>('a').forEach((a) => {
+      a.target = '_blank';
+      a.rel = 'noopener';
+    });
+};
+
 /**
  * Sorts a panel's Nav Links CMS items into labelled groups. The list arrives
  * sorted by group order then link order, so consecutive items that share a
@@ -70,13 +104,14 @@ const buildGroups = (root: HTMLElement, panel: HTMLElement): HTMLElement[] => {
   const main = panel.querySelector<HTMLElement>('[data-nav-main]') || panel;
   const aside = panel.querySelector<HTMLElement>('[data-nav-aside]') || main;
   const isAside = (item: HTMLElement) =>
-    item.getAttribute('data-nav-aside') === 'true' ||
+    isOn(item.getAttribute('data-nav-aside')) ||
     !!item.querySelector('[data-nav-aside-flag]:not(.w-condition-invisible)');
 
   const groups: HTMLElement[] = [];
   let list: HTMLElement | null = null;
   let current = '';
   items.forEach((item) => {
+    prepareItem(item);
     const name = (item.getAttribute('data-nav-group') || '').trim();
     if (!list || name !== current) {
       const group = template.cloneNode(true) as HTMLElement;

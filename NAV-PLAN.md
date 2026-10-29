@@ -78,16 +78,15 @@ Text colour never changes on hover (Ben: white stays crisp white on Brand, green
    - Like every collection it has a template page (`/nav-links/...`). **Set it to Draft** in the Pages panel before any items are published, so no item pages go live.
 3. [x] **Bundle** (done 29 Oct, built, not pushed): `src/components/megaNav.ts`, `navIcons.ts` (+ `navIconPaths.ts`, 26 Phosphor icons). Inert until the page has `[data-nav]`, so the live nav is untouched. Tested in `tests/fixtures/nav.html` (all 38 links, desktop and 375px): grouping, hover intent, morph, Escape, click outside, keyboard, scroll hide/show, phone accordion and burger.
 
-   **Markup contract** (Lumos classes from `LUMOS.md`, CSS is Ben's):
-   - `[data-nav]` on `nav_component`; `[data-nav-bar]` on `nav_desktop_wrap` (gets `.is-active` once scrolled past 10px; style the 72 to 60px state from it).
-   - `[data-nav-toggle="product|customers|resources"]` on each `nav_links_link` button; `.is-active` + `aria-expanded` when open (chevron reads the Lumos state var).
-   - `[data-nav-panel="…"]` on each `nav_dropdown_mega_layout`, inside its `nav_links_item`. Desktop: absolute under the bar, full width, hidden by default (JS fades it). Phone: static in the menu (JS animates height for the accordion). `.is-active` when open.
-   - Inside each panel: `[data-nav-main]` (`nav_dropdown_mega_main`) and `[data-nav-aside]` (`nav_aside_wrap`), plus one Nav Links Collection List filtered by Menu + Show in nav, sorted Group order then Order.
-   - Each Collection Item: `[data-nav-item]` + `data-nav-group` bound to Group, and a `[data-nav-aside-flag]` div visible only when Right column is on (conditional visibility). Item content = `nav_row_wrap` (Layout = Item) or `nav_quick_wrap` (Layout = Quick) via conditional visibility; icon tile `[data-nav-icon]` bound to Icon, logo image shown when Logo is set.
-   - `[data-nav-bg]` on `nav_dropdown_bg`: one desktop background under the bar, height animated by JS. It must sit **behind** the panels (lower z-index), or it paints over them because it comes later in the DOM.
-   - `[data-nav-burger]` on `nav_menu_button_wrap`, `[data-nav-menu]` on the phone menu; both get `.is-active` when open.
-   - `.nav_hidden.u-display-none` holding the templates JS clones: `nav_group_wrap` (`nav_group_label_wrap > nav_group_label`, `nav_group_list`), a `nav_group_list is-split` (keeps the combo class), and `nav_group_highlight`.
-   - The existing `navHover` pill keeps working on `.nav_links_list`.
+   **Markup contract** (as built on the test page, 29 Oct; Lumos classes are new so Greg's nav classes stay untouched):
+   - `[data-nav]` on `nav_wrap u-theme-brand` (sticky root); `[data-nav-bar]` on `nav_bar` (`.is-active` once scrolled past 10px) > `nav_bar_layout` > `nav_bar_logo`, `nav_menu_list[data-nav-menu]`, `nav_burger_wrap[data-nav-burger]` > `nav_burger_line` x2.
+   - `nav_menu_item` > `nav_menu_link[data-nav-toggle="product|customers|resources"]` (`nav_menu_text`, `nav_menu_icon`) + `nav_panel_wrap[data-nav-panel]` > `nav_panel_main[data-nav-main]` + `nav_aside_wrap[data-nav-aside]`. Pricing is a plain `nav_menu_link`. `nav_menu_link` sits above the navHover pill (`position: relative; z-index: 2`); navHover now targets `.nav_menu_list` too.
+   - One Nav Links Collection List per panel, inside `nav_panel_main`. Filter: Menu = that menu AND Show in nav is on. Sort: Group order, then Order (ascending).
+   - Collection Item `nav_group_item[data-nav-item]` with attributes bound to CMS: `data-nav-group` (Group), `data-nav-layout` (Layout), `data-nav-aside` (Column). Switch fields can't bind to attributes, so "Right column" became the Option field **Column** (Main / Right column) and "Open in new tab" was removed: the bundle treats any link to another host as external (new tab + arrow).
+   - Item content (no conditional visibility needed, the bundle trims it): `nav_row_wrap` (link bound to Link) > `nav_row_icon_wrap[data-nav-icon=Icon]`, `nav_row_logo_wrap > nav_row_logo` (image bound to Logo), `nav_row_content > nav_row_title (Name), nav_row_text (Description)`, `nav_row_external[data-nav-icon=arrow-up-right]`; and `nav_quick_wrap` (link bound) > `nav_quick_title (Name)`, `nav_quick_arrow[data-nav-icon=arrow-right]`.
+   - `nav_panel_bg[data-nav-bg]`: desktop background under the bar, behind the panels (z-index 1 vs 2).
+   - `nav_hidden u-display-none` templates: `nav_group_wrap > nav_group_label_wrap > nav_group_label` + `nav_group_list`, a `nav_group_list is-split`, and `nav_group_highlight`.
+
 4. [ ] **Webflow staging.**
    - Build the new nav component in Lumos classes: Ben does the CSS, Claude does the attributes and wiring.
    - Add the 3 Collection Lists and the static instances.

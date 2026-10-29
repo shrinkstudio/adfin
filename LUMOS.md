@@ -34,11 +34,21 @@ Greg's live classes stay as they are, even where they predate these rules (`nav_
 | Hover pill (bundle) | `nav_hover_pill` |
 | Dropdown | `nav_dropdown_component` > `nav_dropdown_mega_wrap` > `nav_dropdown_mega_contain` > `nav_dropdown_mega_scroll` > `nav_dropdown_mega_layout` |
 
+### New nav (built 29 Oct; replaces the live classes above once it ships)
+
+| Element | Class |
+|---|---|
+| Root, bar | `nav_wrap` (+ `u-theme-brand`), `nav_bar` > `nav_bar_layout` > `nav_bar_logo` |
+| Menu | `nav_menu_list` > `nav_menu_item` > `nav_menu_link` (`nav_menu_text`, `nav_menu_icon`) |
+| Panel | `nav_panel_wrap` > `nav_panel_main` + `nav_aside_wrap`; `nav_panel_bg` |
+| Phone | `nav_burger_wrap` > `nav_burger_line` |
+| CMS item | `nav_group_item` |
+
 ### Panel (AB Handshake pattern, 29 Oct)
 
 | Element | Class | Notes |
 |---|---|---|
-| Panel body | `nav_dropdown_mega_layout` > `nav_dropdown_mega_main` + `nav_aside_wrap` | main = group columns; aside = right column with a 1px left rule `nav_aside_line`, no tint |
+| Panel body | `nav_panel_wrap` > `nav_panel_main` + `nav_aside_wrap` | main = group columns; aside = right column with a 1px left rule `nav_aside_line`, no tint |
 | Group | `nav_group_wrap` > `nav_group_label_wrap` > `nav_group_label`, `nav_group_list` | mono uppercase label; 2-column lists use CSS grid |
 | Travelling hover fill | `nav_group_highlight` | one per group, moved by JS |
 | Link | `nav_row_wrap` | `<a>`, `data-trigger="hover focus"` |

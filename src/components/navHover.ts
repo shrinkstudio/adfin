@@ -10,9 +10,10 @@ declare global {
   }
 }
 
-const LIST = '.nav_links_list';
-const ITEM = '.nav_links_item';
-const LINK = '.nav_links_link';
+/* the current nav, and the new CMS nav (megaNav) */
+const LIST = '.nav_links_list, .nav_menu_list';
+const ITEM = '.nav_links_item, .nav_menu_item';
+const LINK = '.nav_links_link, .nav_menu_link';
 const PILL_CLASS = 'nav_hover_pill';
 
 /**
