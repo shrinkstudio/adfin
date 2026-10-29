@@ -13,7 +13,9 @@ import { hubMap } from './hubMap';
 import { hubspotForms } from './hubspotForms';
 import { localeNudge } from './localeNudge';
 import { lottie } from './lottie';
+import { megaNav } from './megaNav';
 import { navHover } from './navHover';
+import { navIcons } from './navIcons';
 import { progressTab } from './progressTab';
 import { rotatingTitle } from './rotatingTitle';
 import { toc } from './toc';
@@ -40,6 +42,8 @@ export const components = (): void => {
   hubspotForms();
   localeNudge();
   lottie();
+  navIcons();
+  megaNav();
   navHover();
   progressTab();
   rotatingTitle();
