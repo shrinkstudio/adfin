@@ -6,30 +6,70 @@ const log = createLogger('lottie');
 declare global {
   interface Window {
     lottie?: any;
+    fflate?: any;
   }
 }
 
 const SOURCE = '[data-lottie]';
 const PLAYER_URL =
   'https://cdn.jsdelivr.net/npm/lottie-web@5.13.0/build/player/lottie_light.min.js';
+const UNZIP_URL = 'https://cdn.jsdelivr.net/npm/fflate@0.8.2/umd/index.js';
 /* fetch players this far before they scroll into view */
 const LOAD_MARGIN = '50% 0px';
 
-let playerLoading: Promise<any> | null = null;
+const scripts = new Map<string, Promise<void>>();
 
-/** lottie-web (SVG-only build) is pulled in only when a page has a Lottie. */
-const loadPlayer = (): Promise<any> => {
-  if (window.lottie) return Promise.resolve(window.lottie);
-  if (playerLoading) return playerLoading;
-  playerLoading = new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    script.src = PLAYER_URL;
-    script.onload = () => resolve(window.lottie);
-    script.onerror = () => reject(new Error('lottie-web failed to load'));
-    document.head.appendChild(script);
-  });
-  return playerLoading;
+/* third-party scripts load once, and only when a page has a Lottie */
+const loadScript = (src: string): Promise<void> => {
+  let pending = scripts.get(src);
+  if (!pending) {
+    pending = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error(`${src} failed to load`));
+      document.head.appendChild(script);
+    });
+    scripts.set(src, pending);
+  }
+  return pending;
 };
+
+const toBase64 = (bytes: Uint8Array): string => {
+  let binary = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+  }
+  return btoa(binary);
+};
+
+/**
+ * A .lottie file is a zip: manifest.json, animations/<id>.json and any
+ * images/. Unpack the first animation and inline its images, so lottie-web
+ * can play it like a plain .json.
+ */
+const readDotLottie = async (url: string): Promise<any> => {
+  await loadScript(UNZIP_URL);
+  const { unzipSync, strFromU8 } = window.fflate;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`${url} -> ${res.status}`);
+  const files = unzipSync(new Uint8Array(await res.arrayBuffer()));
+  const manifest = JSON.parse(strFromU8(files['manifest.json']));
+  const id = manifest.animations?.[0]?.id;
+  const data = JSON.parse(strFromU8(files[`animations/${id}.json`]));
+  for (const asset of data.assets || []) {
+    const file = asset.p && files[`images/${asset.p}`];
+    if (!file) continue;
+    const ext = asset.p.split('.').pop()?.toLowerCase();
+    const mime = ext === 'svg' ? 'image/svg+xml' : `image/${ext === 'jpg' ? 'jpeg' : ext}`;
+    asset.u = '';
+    asset.p = `data:${mime};base64,${toBase64(file)}`;
+    asset.e = 1;
+  }
+  return data;
+};
+
+const isDotLottie = (src: string): boolean => /\.lottie$/i.test(src.split(/[?#]/)[0]);
 
 interface LottieAnim {
   play(): void;
@@ -40,7 +80,7 @@ interface LottieAnim {
 
 /**
  * Lottie animations from plain Webflow markup. Each `[data-lottie]` element
- * carries the JSON URL in `data-lottie-src` (empty = skipped, so a card can
+ * carries a .json or .lottie URL in `data-lottie-src` (empty = skipped, so a card can
  * hold the element unused). The player loads once near the viewport; the
  * animation loops while on screen and pauses off it. Reduced motion holds a
  * still frame: `data-lottie-frame` (default 0). `data-lottie-loop="false"`
@@ -66,14 +106,18 @@ export const lottie = (): void => {
   const create = (el: HTMLElement): void => {
     if (el.hasAttribute('data-lottie-fired')) return;
     el.setAttribute('data-lottie-fired', '');
-    loadPlayer()
-      .then((player) => {
-        const anim: LottieAnim = player.loadAnimation({
+    const src = (el.getAttribute('data-lottie-src') || '').trim();
+    Promise.all([
+      loadScript(PLAYER_URL),
+      isDotLottie(src) ? readDotLottie(src) : Promise.resolve(null),
+    ])
+      .then(([, animationData]) => {
+        const anim: LottieAnim = window.lottie.loadAnimation({
           container: el,
           renderer: 'svg',
           loop: el.getAttribute('data-lottie-loop') !== 'false',
           autoplay: false,
-          path: (el.getAttribute('data-lottie-src') || '').trim(),
+          ...(animationData ? { animationData } : { path: src }),
         });
         anim.addEventListener('DOMLoaded', () => {
           anims.set(el, anim);
