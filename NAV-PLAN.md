@@ -84,7 +84,7 @@ Text colour never changes on hover (Ben: white stays crisp white on Brand, green
    - `[data-nav-panel="…"]` on each `nav_dropdown_mega_layout`, inside its `nav_links_item`. Desktop: absolute under the bar, full width, hidden by default (JS fades it). Phone: static in the menu (JS animates height for the accordion). `.is-active` when open.
    - Inside each panel: `[data-nav-main]` (`nav_dropdown_mega_main`) and `[data-nav-aside]` (`nav_aside_wrap`), plus one Nav Links Collection List filtered by Menu + Show in nav, sorted Group order then Order.
    - Each Collection Item: `[data-nav-item]` + `data-nav-group` bound to Group, and a `[data-nav-aside-flag]` div visible only when Right column is on (conditional visibility). Item content = `nav_row_wrap` (Layout = Item) or `nav_quick_wrap` (Layout = Quick) via conditional visibility; icon tile `[data-nav-icon]` bound to Icon, logo image shown when Logo is set.
-   - `[data-nav-bg]` on `nav_dropdown_bg`: one desktop background under the bar, height animated by JS.
+   - `[data-nav-bg]` on `nav_dropdown_bg`: one desktop background under the bar, height animated by JS. It must sit **behind** the panels (lower z-index), or it paints over them because it comes later in the DOM.
    - `[data-nav-burger]` on `nav_menu_button_wrap`, `[data-nav-menu]` on the phone menu; both get `.is-active` when open.
    - `.nav_hidden.u-display-none` holding the templates JS clones: `nav_group_wrap` (`nav_group_label_wrap > nav_group_label`, `nav_group_list`), a `nav_group_list is-split` (keeps the combo class), and `nav_group_highlight`.
    - The existing `navHover` pill keeps working on `.nav_links_list`.
