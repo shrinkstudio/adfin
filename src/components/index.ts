@@ -12,6 +12,7 @@ import { faqSearch } from './faqSearch';
 import { hubMap } from './hubMap';
 import { hubspotForms } from './hubspotForms';
 import { localeNudge } from './localeNudge';
+import { lottie } from './lottie';
 import { navHover } from './navHover';
 import { progressTab } from './progressTab';
 import { rotatingTitle } from './rotatingTitle';
@@ -38,6 +39,7 @@ export const components = (): void => {
   hubMap();
   hubspotForms();
   localeNudge();
+  lottie();
   navHover();
   progressTab();
   rotatingTitle();
