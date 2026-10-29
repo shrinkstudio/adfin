@@ -95,7 +95,9 @@ Text colour never changes on hover (Ben: white stays crisp white on Brand, green
      - IE/US locales
      - keyboard, touch and reduced motion
      - the Collection List budget on the heaviest pages
-   - 29 Oct, staging test page "Locale Navigation (Test)" with build `65a5deb` (fix `e48700a`: the aside column lookup skipped CMS items, which also carry `data-nav-aside`). Passed: grouping and order, aside groups, Quick vs Item trimming, 5 partner logos, Help centre external only, hover open/switch/morph, pill, row fill, Escape, keyboard focus, burger + scroll lock, accordion. Still to do: IE/US, reduced motion, list budget, link check.
+   - 29 Oct, staging test page "Locale Navigation (Test)" with build `65a5deb` (fix `e48700a`: the aside column lookup skipped CMS items, which also carry `data-nav-aside`). Passed: grouping and order, aside groups, Quick vs Item trimming, 5 partner logos, Help centre external only, hover open/switch/morph, pill, row fill, Escape, keyboard focus, burger + scroll lock, accordion. Still to do: list budget, link check.
+   - IE/US (`77d5488`): CMS Link fields hold plain URLs that Webflow doesn't localise, so the bundle prefixes internal links with `/ie` or `/us` on those locales. Tested on the fixture only: locale publishing is off, so `/ie` and `/us` 404 on staging. Re-check on staging once publishing is on.
+   - Reduced motion (`77d5488`): open, morph, the phone menu and the scroll-hide were already near-instant; the row highlight and the menu pill now jump instead of sliding.
    - jsDelivr can keep `@production` on an old build for hours after a purge. To test a new build on staging, swap in the commit-pinned build (`@<build sha>`).
 5. [ ] **Publish**, with Ben's OK.
 
