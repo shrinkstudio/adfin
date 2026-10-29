@@ -16,6 +16,7 @@ import { lottie } from './lottie';
 import { megaNav } from './megaNav';
 import { navHover } from './navHover';
 import { navIcons } from './navIcons';
+import { navLocale } from './navLocale';
 import { progressTab } from './progressTab';
 import { rotatingTitle } from './rotatingTitle';
 import { toc } from './toc';
@@ -45,6 +46,7 @@ export const components = (): void => {
   navIcons();
   megaNav();
   navHover();
+  navLocale();
   progressTab();
   rotatingTitle();
   toc();

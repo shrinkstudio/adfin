@@ -40,7 +40,9 @@ Greg's live classes stay as they are, even where they predate these rules (`nav_
 |---|---|
 | Root, bar | `nav_wrap` (+ `u-theme-brand`), `nav_bar` > `nav_bar_layout` > `nav_bar_logo` |
 | Menu | `nav_menu_list` > `nav_menu_item` > `nav_menu_link` (`nav_menu_text u-text-style-small`, `nav_menu_icon` > Phosphor Icon `ph-caret-down`) |
-| Actions | `nav_bar_actions` > Button Main instances (Sign in, Book a demo) + the native Locales element |
+| Actions | `nav_bar_actions[data-nav-actions]` > `nav_locale_wrap` + Button Main instances (Sign in, Book a demo); the bundle moves it to the end of the phone menu |
+| Locale switcher | `nav_locale_wrap[data-nav-locale]` > `nav_locale_toggle` (button: `nav_locale_flag`, `nav_locale_text`, `nav_locale_icon`) + `nav_locale_list` (native Locales wrapper) > `nav_locale_items` > `nav_locale_item` > `nav_locale_link` (`nav_locale_flag`, `nav_locale_text`) |
+| Phone back | `nav_bar_back[data-nav-back]` (button: `nav_bar_back_icon`, `nav_bar_back_text`), takes the logo's place while a panel is open |
 | Panel | `nav_panel_wrap` > `nav_panel_main` + `nav_aside_wrap`; `nav_panel_bg` |
 | Phone | `nav_burger_wrap` > `nav_burger_line` |
 | CMS item | `nav_group_item` |

@@ -22,10 +22,13 @@ declare global {
 //                                               Main|Right column); external links are detected
 //     [data-nav-bg]                             desktop panel background, morphs height
 //     [data-nav-burger] / [data-nav-menu]       phone menu button / menu
+//     [data-nav-back] / [data-nav-logo]         phone Back button / the logo it replaces
+//     [data-nav-actions]                        locale + CTAs; moved into the phone menu
 //     .nav_hidden.u-display-none                templates: .nav_group_wrap,
 //                                               .nav_group_list.is-split, .nav_group_highlight
 // State written: .is-active + aria-expanded on toggles and the burger, .is-active
-// on the open panel and the phone menu. Hover and colour live in CSS.
+// on the open panel and the phone menu. Hover and colour live in CSS. On phones
+// each panel is its own screen over the menu, with Back in the bar.
 const ROOT = '[data-nav]';
 const BAR = '[data-nav-bar]';
 const TOGGLE = '[data-nav-toggle]';
@@ -33,6 +36,9 @@ const PANEL = '[data-nav-panel]';
 const BG = '[data-nav-bg]';
 const BURGER = '[data-nav-burger]';
 const MENU = '[data-nav-menu]';
+const BACK = '[data-nav-back]';
+const LOGO = '[data-nav-logo]';
+const ACTIONS = '[data-nav-actions]';
 const ITEM = '[data-nav-item]';
 const GROUP = '.nav_group_wrap';
 const LIST = '.nav_group_list';
@@ -215,7 +221,7 @@ const addHighlights = (root: HTMLElement, groups: HTMLElement[]): void => {
 /**
  * Adfin's nav: one desktop panel background that morphs between the Product,
  * Customers and Resources panels (hover intent, content fades in, keyboard),
- * an accordion on phones, and a bar that hides on scroll down and returns on
+ * a screen per panel on phones (Back in the bar), and a bar that hides on scroll down and returns on
  * scroll up. Panel content comes from the Nav Links CMS, grouped here. Inert
  * until the page has `[data-nav]`, so the current nav is untouched.
  */
@@ -230,6 +236,9 @@ export const megaNav = (): void => {
   const bg = root.querySelector<HTMLElement>(BG);
   const burger = root.querySelector<HTMLElement>(BURGER);
   const menu = root.querySelector<HTMLElement>(MENU);
+  const back = root.querySelector<HTMLElement>(BACK);
+  const logo = root.querySelector<HTMLElement>(LOGO);
+  const actions = root.querySelector<HTMLElement>(ACTIONS);
   if (!toggles.length || !panels.length) return;
 
   const groups = panels.flatMap((p) => buildGroups(root, p));
@@ -289,8 +298,8 @@ export const megaNav = (): void => {
   const resetDesktop = () => {
     kill();
     panels.forEach((p) => {
-      gsap.set(p, { autoAlpha: 0, x: 0, clearProps: 'height,overflow' });
-      gsap.set(content(p), { autoAlpha: 1, x: 0, y: 0 });
+      gsap.set(p, { autoAlpha: 0, x: 0, clearProps: 'height,overflow,pointerEvents,transform' });
+      gsap.set(content(p), { autoAlpha: 1, x: 0, xPercent: 0, y: 0 });
     });
     if (bg) gsap.set(bg, { height: 0 });
     state.active = null;
@@ -394,40 +403,97 @@ export const megaNav = (): void => {
   };
 
   // ---- phones -------------------------------------------------------------
+  // A panel opens as its own screen over the menu: the menu rows slide out to
+  // the left, the panel slides in from the right and Back replaces the logo.
+
+  /* the menu's visible rows: each item's link (not its panel) and the actions */
+  const rows = (): Element[] =>
+    menu
+      ? [...menu.children].flatMap((child) =>
+          child.querySelector(PANEL)
+            ? [...child.children].filter((c) => !c.matches(PANEL))
+            : [child]
+        )
+      : [];
+  const chrome = () => [back, logo].filter((el): el is HTMLElement => !!el);
 
   const resetPhone = () => {
     kill();
+    gsap.killTweensOf([...rows(), ...chrome()]);
     panels.forEach((p) => {
       p.classList.remove(ACTIVE);
-      gsap.set(p, { clearProps: 'opacity,visibility,transform', height: 0, overflow: 'hidden' });
+      gsap.set(p, { clearProps: 'height,overflow,transform', autoAlpha: 0, pointerEvents: 'none' });
       gsap.set(content(p), { clearProps: 'all' });
     });
+    gsap.set([...rows(), ...chrome()], { clearProps: 'opacity,visibility,transform' });
+    if (menu) gsap.set(menu, { clearProps: 'overflowY' });
     if (bg) gsap.set(bg, { clearProps: 'height' });
     state.active = null;
     setActive(null);
   };
 
-  const accordion = (key: string) => {
+  const openScreen = (key: string) => {
+    const panel = panelOf(key);
+    if (!panel || !menu) return;
+    kill();
+    gsap.killTweensOf([...rows(), ...chrome()]);
+    state.active = key;
+    setActive(key);
+    menu.scrollTop = 0;
+    panel.scrollTop = 0;
+    gsap.set(menu, { overflowY: 'hidden' });
+
+    const tl = gsap.timeline();
+    state.tl = tl;
+    tl.to(
+      rows(),
+      {
+        xPercent: -10,
+        autoAlpha: 0,
+        duration: 0.3 * speed,
+        stagger: 0.02 * speed,
+        ease: 'power2.in',
+      },
+      0
+    );
+    if (logo) tl.to(logo, { autoAlpha: 0, duration: 0.2 * speed, ease: 'power2.in' }, 0);
+    if (back) tl.to(back, { autoAlpha: 1, duration: 0.25 * speed, ease: EASE }, 0.15 * speed);
+    tl.set(panel, { autoAlpha: 1, pointerEvents: 'auto' }, 0.2 * speed);
+    tl.fromTo(
+      content(panel),
+      { xPercent: 8, autoAlpha: 0 },
+      { xPercent: 0, autoAlpha: 1, duration: d('contentIn'), stagger: 0.04 * speed, ease: EASE },
+      0.2 * speed
+    );
+    window.setTimeout(() => back?.focus(), 300 * speed);
+  };
+
+  const closeScreen = () => {
+    const key = state.active;
     const panel = panelOf(key);
     if (!panel) return;
-    const opening = state.active !== key;
-    const current = panelOf(state.active);
-    if (current) gsap.to(current, { height: 0, duration: d('close'), ease: 'power2.in' });
-    state.active = opening ? key : null;
-    setActive(state.active);
-    if (!opening) return;
-    gsap.fromTo(panel, { height: 0 }, { height: 'auto', duration: d('open'), ease: EASE });
-    gsap.fromTo(
-      content(panel),
-      { autoAlpha: 0, y: 8 },
-      {
-        autoAlpha: 1,
-        y: 0,
-        duration: d('contentIn'),
-        ease: EASE,
-        stagger: 0.04 * speed,
-        delay: 0.05,
-      }
+    kill();
+    gsap.killTweensOf([...rows(), ...chrome()]);
+    state.active = null;
+    setActive(null);
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        if (menu) gsap.set(menu, { clearProps: 'overflowY' });
+        // the row is hidden until here, and a hidden button can't take focus
+        toggleOf(key)?.focus();
+      },
+    });
+    state.tl = tl;
+    tl.to(panel, { xPercent: 20, autoAlpha: 0, duration: 0.3 * speed, ease: 'power2.in' }, 0);
+    tl.set(panel, { xPercent: 0, pointerEvents: 'none' });
+    if (back) tl.to(back, { autoAlpha: 0, duration: 0.2 * speed, ease: 'power2.in' }, 0);
+    if (logo) tl.to(logo, { autoAlpha: 1, duration: 0.25 * speed, ease: EASE }, 0.15 * speed);
+    tl.fromTo(
+      rows(),
+      { xPercent: -20, autoAlpha: 0 },
+      { xPercent: 0, autoAlpha: 1, duration: 0.35 * speed, stagger: 0.03 * speed, ease: EASE },
+      0.2 * speed
     );
   };
 
@@ -441,14 +507,34 @@ export const megaNav = (): void => {
     if (openMenu) {
       gsap.fromTo(menu, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.35 * speed, ease: EASE });
       gsap.fromTo(
-        menu.children,
+        rows(),
         { autoAlpha: 0, y: 8 },
         { autoAlpha: 1, y: 0, duration: 0.3 * speed, ease: EASE, stagger: 0.04 * speed }
       );
     } else {
-      gsap.to(menu, { autoAlpha: 0, duration: 0.25 * speed, ease: 'power2.in' });
-      if (state.active) accordion(state.active);
+      kill();
+      if (state.active) {
+        if (back) gsap.to(back, { autoAlpha: 0, duration: 0.2 * speed });
+        if (logo) gsap.to(logo, { autoAlpha: 1, duration: 0.2 * speed });
+      }
+      gsap.to(menu, {
+        autoAlpha: 0,
+        duration: 0.25 * speed,
+        ease: 'power2.in',
+        onComplete: () => !desktopMq.matches && resetPhone(),
+      });
     }
+  };
+
+  /* the actions (locale, Sign in, Book a demo) sit at the end of the phone menu */
+  const actionsHome = actions && {
+    parent: actions.parentElement,
+    next: actions.nextElementSibling,
+  };
+  const placeActions = (phone: boolean) => {
+    if (!actions || !actionsHome?.parent || !menu) return;
+    if (phone) menu.appendChild(actions);
+    else actionsHome.parent.insertBefore(actions, actionsHome.next);
   };
 
   // ---- shared events ------------------------------------------------------
@@ -462,8 +548,9 @@ export const megaNav = (): void => {
     });
     on(toggle, 'click', (e: MouseEvent) => {
       e.preventDefault();
-      if (!desktopMq.matches) accordion(key);
-      else if (state.active === key && !state.closing) close();
+      if (!desktopMq.matches) {
+        if (state.active !== key) openScreen(key);
+      } else if (state.active === key && !state.closing) close();
       else open(key);
     });
     on(toggle, 'keydown', (e: KeyboardEvent) => {
@@ -515,6 +602,8 @@ export const megaNav = (): void => {
       const toggle = toggleOf(state.active);
       close();
       toggle?.focus();
+    } else if (!desktopMq.matches && state.active) {
+      closeScreen();
     } else if (state.menuOpen) {
       setMenu(false);
       burger?.focus();
@@ -532,6 +621,7 @@ export const megaNav = (): void => {
     }
     on(burger, 'click', () => setMenu(!state.menuOpen));
   }
+  if (back) on(back, 'click', closeScreen);
 
   // ---- scroll: scrolled state, hide on the way down, show on the way up ----
   let lastY = window.scrollY;
@@ -565,8 +655,11 @@ export const megaNav = (): void => {
     if (desktopMq.matches) {
       if (state.menuOpen) setMenu(false);
       if (menu) gsap.set(menu, { clearProps: 'opacity,visibility' });
+      gsap.set(chrome(), { clearProps: 'opacity,visibility' });
+      placeActions(false);
       resetDesktop();
     } else {
+      placeActions(true);
       resetPhone();
       if (menu && !state.menuOpen) gsap.set(menu, { autoAlpha: 0 });
     }
