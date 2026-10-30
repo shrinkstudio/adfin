@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { submitToHubSpot } from './hubspot';
 import { submitAndOpen } from './revenuehero';
-import { ALL_FIELD_NAMES, EMAIL_RE, type FieldDef, STEPS } from './steps';
+import { ALL_FIELD_NAMES, EMAIL_RE, type FieldDef, stepsFor } from './steps';
 import { css } from './styles';
 import { renderTurnstile } from './turnstile';
 
@@ -10,6 +10,7 @@ export interface BookDemoFormProps {
   theme?: 'light' | 'dark';
   routerId?: string;
   redirectUrl?: string;
+  showRegion?: boolean;
   hubspotPortalId?: string;
   hubspotFormGuid?: string;
   turnstileSitekey?: string;
@@ -57,6 +58,7 @@ export function BookDemoForm(props: BookDemoFormProps) {
     theme = 'light',
     routerId = '5191',
     redirectUrl = '',
+    showRegion = true,
     hubspotPortalId = '',
     hubspotFormGuid = '',
     turnstileSitekey = '0x4AAAAAAAQTptj2So4dx43e',
@@ -88,8 +90,9 @@ export function BookDemoForm(props: BookDemoFormProps) {
   }, []);
 
   const turnstileRef = useRef<HTMLDivElement | null>(null);
-  const isLast = step === STEPS.length - 1;
-  const currentFields = STEPS[step].fields;
+  const steps = useMemo(() => stepsFor(showRegion), [showRegion]);
+  const isLast = step === steps.length - 1;
+  const currentFields = steps[step].fields;
 
   const set = (name: string, value: string) => setValues((v) => ({ ...v, [name]: value }));
 
@@ -214,7 +217,7 @@ export function BookDemoForm(props: BookDemoFormProps) {
 
         <div className="bd__progress">
           <div className="bd__dots">
-            {(handoff ? STEPS.slice(1) : STEPS).map((_, i) => {
+            {(handoff ? steps.slice(1) : steps).map((_, i) => {
               const active = handoff ? step - 1 : step;
               return (
                 <span
@@ -227,7 +230,7 @@ export function BookDemoForm(props: BookDemoFormProps) {
             })}
           </div>
           <span className="bd__step-label">
-            Step {handoff ? step : step + 1} of {handoff ? STEPS.length - 1 : STEPS.length}
+            Step {handoff ? step : step + 1} of {handoff ? steps.length - 1 : steps.length}
           </span>
         </div>
 

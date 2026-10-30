@@ -49,6 +49,12 @@ export const STEPS: StepDef[] = [
   },
 ];
 
+/* region only routes UK leads, so single-calendar locales run without it */
+export const stepsFor = (showRegion: boolean): StepDef[] =>
+  showRegion
+    ? STEPS
+    : STEPS.map((s) => ({ fields: s.fields.filter((f) => f.name !== 'territory') }));
+
 export const ALL_FIELD_NAMES = STEPS.flatMap((s) => s.fields.map((f) => f.name));
 
 export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
