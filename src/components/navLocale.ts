@@ -9,11 +9,15 @@ const LIST = '[data-nav-locale-list]';
 const DESKTOP = '(min-width: 62em)';
 const ACTIVE = 'is-active';
 
+/* the native list can only show Webflow's language code, so "en" for all three */
+const LABELS: Record<string, string> = { 'en-GB': 'UK', 'en-IE': 'IRE', 'en-US': 'USA' };
+
 /**
  * Region switcher in the nav. The toggle shows the current locale (flag and
  * name bound in Webflow) and opens the native Locales list: a dropdown under
  * it on desktop, opening in place inside the phone menu. Escape or a click
- * outside closes it. `.is-active` on the root turns the caret via CSS.
+ * outside closes it. `.is-active` on the root turns the caret via CSS. Short
+ * names come from LABELS, on the list and the toggle.
  */
 export const navLocale = (): void => {
   const { gsap } = window;
@@ -30,6 +34,14 @@ export const navLocale = (): void => {
     list.id ||= `nav-locale-${i}`;
     toggle.setAttribute('aria-controls', list.id);
     toggle.setAttribute('aria-expanded', 'false');
+
+    list.querySelectorAll<HTMLAnchorElement>('a[hreflang]').forEach((link) => {
+      const label = LABELS[link.hreflang];
+      if (!label) return;
+      link.textContent = label;
+      const current = toggle.querySelector('.nav_locale_text');
+      if (current && link.hasAttribute('aria-current')) current.textContent = label;
+    });
 
     let open = false;
     const set = (next: boolean) => {
