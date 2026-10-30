@@ -297,13 +297,24 @@ export const megaNav = (): void => {
     });
   };
 
+  // the background grows and shrinks more slowly than the panels change, so
+  // panels are cut to it: nothing shows past its bottom border
+  const clipToBg = () => {
+    const height = Number(gsap.getProperty(bg, 'height'));
+    panels.forEach((p) => {
+      p.style.clipPath = `inset(0 0 ${Math.max(0, p.offsetHeight - height)}px 0)`;
+    });
+  };
+  const unclip = () => panels.forEach((p) => p.style.removeProperty('clip-path'));
+
   const resetDesktop = () => {
     kill();
+    unclip();
     panels.forEach((p) => {
       gsap.set(p, { autoAlpha: 0, x: 0, clearProps: 'height,overflow,pointerEvents,transform' });
       gsap.set(content(p), { autoAlpha: 1, x: 0, xPercent: 0, y: 0 });
     });
-    if (bg) gsap.set(bg, { height: 0 });
+    if (bg) gsap.set(bg, { height: 0, autoAlpha: 0 });
     state.active = null;
     state.closing = false;
     setActive(null);
@@ -324,7 +335,20 @@ export const megaNav = (): void => {
     hideOthers(panel);
     const tl = gsap.timeline();
     state.tl = tl;
-    if (bg) tl.to(bg, { height: panel.offsetHeight, duration: d('open'), ease: EASE }, 0);
+    if (bg) {
+      tl.set(bg, { autoAlpha: 1 }, 0);
+      tl.to(
+        bg,
+        {
+          height: panel.offsetHeight,
+          duration: d('open'),
+          ease: EASE,
+          onUpdate: clipToBg,
+          onComplete: unclip,
+        },
+        0
+      );
+    }
     tl.set(panel, { autoAlpha: 1 }, 0.05);
     tl.fromTo(
       content(panel),
@@ -352,14 +376,27 @@ export const megaNav = (): void => {
     hideOthers(fromEl, toEl);
     state.active = to;
     setActive(to);
-    const out = d('contentOut');
+    // the old panel is gone before the new one shows, so they never overlap
+    const out = d('contentOut') * 0.7;
     const tl = gsap.timeline();
     state.tl = tl;
     tl.to(content(fromEl), { autoAlpha: 0, x: dir * -24, duration: out, ease: 'power2.in' }, 0);
     tl.set(fromEl, { autoAlpha: 0 }, out);
     tl.set(content(fromEl), { x: 0 }, out);
-    if (bg) tl.to(bg, { height: toEl.offsetHeight, duration: d('morph'), ease: EASE }, 0.05);
-    tl.set(toEl, { autoAlpha: 1 }, out * 0.5);
+    if (bg) {
+      tl.to(
+        bg,
+        {
+          height: toEl.offsetHeight,
+          duration: d('morph'),
+          ease: EASE,
+          onUpdate: clipToBg,
+          onComplete: unclip,
+        },
+        0
+      );
+    }
+    tl.set(toEl, { autoAlpha: 1 }, out);
     tl.fromTo(
       content(toEl),
       { autoAlpha: 0, x: dir * 24, y: 0 },
@@ -370,7 +407,7 @@ export const megaNav = (): void => {
         ease: EASE,
         stagger: { amount: d('stagger') },
       },
-      out * 0.6
+      out
     );
   };
 
@@ -387,7 +424,9 @@ export const megaNav = (): void => {
       { autoAlpha: 0, y: -4, duration: d('contentOut') * 0.7, ease: 'power2.in' },
       0
     );
-    if (bg) tl.to(bg, { height: 0, duration: d('close'), ease: 'power2.in' }, 0.05);
+    if (bg) {
+      tl.to(bg, { height: 0, duration: d('close'), ease: 'power2.in', onUpdate: clipToBg }, 0.05);
+    }
     tl.set(panels, { autoAlpha: 0 });
   };
 
@@ -433,7 +472,8 @@ export const megaNav = (): void => {
     });
     gsap.set([...rows(), ...chrome()], { clearProps: 'opacity,visibility,transform' });
     if (menu) gsap.set(menu, { clearProps: 'overflowY' });
-    if (bg) gsap.set(bg, { clearProps: 'height' });
+    if (bg) gsap.set(bg, { clearProps: 'height,opacity,visibility' });
+    unclip();
     state.active = null;
     setActive(null);
   };

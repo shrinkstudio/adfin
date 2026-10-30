@@ -44,7 +44,7 @@ Greg's live classes stay as they are, even where they predate these rules (`nav_
 | Actions | `nav_bar_actions[data-nav-actions]` > `nav_locale_wrap` + Button Main instances (Sign in, Book a demo); the bundle moves it to the end of the phone menu |
 | Locale switcher | `nav_locale_wrap[data-nav-locale]` > `nav_locale_toggle` (button: `nav_locale_flag`, `nav_locale_text`, `nav_locale_icon`) + `nav_locale_list` (native Locales wrapper) > `nav_locale_items` > `nav_locale_item` > `nav_locale_link` (`nav_locale_flag`, `nav_locale_text`) |
 | Phone back | `nav_bar_back[data-nav-back]` (button: `nav_bar_back_icon`, `nav_bar_back_text`), takes the logo's place while a panel is open |
-| Panel | `nav_panel_wrap` > `nav_panel_main` + `nav_aside_wrap`; `nav_panel_bg` |
+| Panel | `nav_panel_wrap` > `nav_panel_main` + `nav_aside_wrap`; `nav_panel_bg` (carries the bottom border) |
 | Phone | `nav_burger_wrap` > `nav_burger_line` |
 | CMS item | `nav_group_item` |
 
