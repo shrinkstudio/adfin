@@ -38,7 +38,7 @@ Greg's live classes stay as they are, even where they predate these rules (`nav_
 
 | Element | Class |
 |---|---|
-| Root, bar | `nav_wrap` (+ `u-theme-brand`), `nav_bar` > `nav_bar_layout` > `nav_bar_logo` |
+| Root, bar | `nav_wrap` (theme set by the component variant), `nav_skip_wrap` > `nav_skip_text`, Nav Banner, `nav_bar` (`<header>`) > `nav_bar_layout` > `nav_bar_logo` |
 | Menu | `nav_menu_list` > `nav_menu_item` > `nav_menu_link` (`nav_menu_text u-text-style-small`, `nav_menu_icon` > Phosphor Icon `ph-caret-down`) |
 | Bar divider | `nav_bar_divider` | 1×36 rule between menu and actions, desktop only |
 | Actions | `nav_bar_actions[data-nav-actions]` > `nav_locale_wrap` + Button Main instances (Sign in, Book a demo); the bundle moves it to the end of the phone menu |
