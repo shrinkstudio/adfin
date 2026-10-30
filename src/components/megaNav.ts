@@ -140,6 +140,8 @@ const buildGroups = (root: HTMLElement, panel: HTMLElement): HTMLElement[] => {
       if (label) label.textContent = name;
       list = group.querySelector<HTMLElement>(LIST) || group;
       list.replaceChildren();
+      // main groups are the bordered columns; right column groups just stack
+      group.classList.toggle('is-column', !isAside(item));
       (isAside(item) ? aside : main).appendChild(group);
       groups.push(group);
       current = name;

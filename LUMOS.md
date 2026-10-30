@@ -52,7 +52,7 @@ Greg's live classes stay as they are, even where they predate these rules (`nav_
 | Element | Class | Notes |
 |---|---|---|
 | Panel body | `nav_panel_wrap` > `nav_panel_main` + `nav_aside_wrap` | main = group columns; aside = right column with a 1px left rule `nav_aside_line`, no tint |
-| Group | `nav_group_wrap` > `nav_group_label_wrap` > `nav_group_label`, `nav_group_list` | mono uppercase label; 2-column lists use CSS grid |
+| Group | `nav_group_wrap` (+ `is-column` on main groups, added by the bundle: full-height column with a 1px right rule) > `nav_group_label_wrap` > `nav_group_label`, `nav_group_list` | mono uppercase label; 2-column lists use CSS grid |
 | Travelling hover fill | `nav_group_highlight` | one per group, moved by JS |
 | Link | `nav_row_wrap` | `<a>`, `data-trigger="hover focus"` |
 | Tile | `nav_row_icon_wrap` > `nav_row_icon` + `nav_row_icon_border`, or `nav_row_logo_wrap` > `nav_row_logo` | 24px outlined icon tile; Paper White logo tile when the CMS item has a logo |
