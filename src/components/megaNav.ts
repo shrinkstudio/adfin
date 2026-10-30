@@ -596,7 +596,7 @@ export const megaNav = (): void => {
 
   // plain links in the bar close an open panel on hover
   root.querySelectorAll<HTMLElement>(`${MENU} a`).forEach((a) => {
-    if (a.closest(PANEL)) return;
+    if (a.closest(PANEL) || a.matches(TOGGLE)) return;
     on(a, 'mouseenter', () => hovers() && state.active && scheduleClose());
   });
   on(root, 'mouseleave', () => hovers() && scheduleClose());
