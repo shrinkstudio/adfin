@@ -31,6 +31,8 @@ export const navHover = (): void => {
   if (!gsap || !hoverable) return;
   // reduced motion: no slide or scale, the pill just fades in place
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // a narrow window still has a mouse, but the list is the phone menu there
+  const desktop = window.matchMedia('(min-width: 62em)');
 
   const lists = document.querySelectorAll<HTMLElement>(LIST);
 
@@ -90,6 +92,7 @@ export const navHover = (): void => {
 
     items.forEach((item) => {
       on(item, 'mouseenter', () => {
+        if (!desktop.matches) return;
         slideTo(item);
         hoverBetween = true;
         fade.play();

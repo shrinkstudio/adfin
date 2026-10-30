@@ -56,7 +56,7 @@ Greg's live classes stay as they are, even where they predate these rules (`nav_
 | Group | `nav_group_wrap` (+ `is-column` on main groups, added by the bundle: full-height column with a 1px right rule) > `nav_group_label_wrap` > `nav_group_label`, `nav_group_list` | mono uppercase label; 2-column lists use CSS grid |
 | Travelling hover fill | `nav_group_highlight` | one per group, moved by JS |
 | Link | `nav_row_wrap` | `<a>`, `data-trigger="hover focus"` |
-| Tile | `nav_row_icon_wrap` > `nav_row_icon` + `nav_row_icon_border`, or `nav_row_logo_wrap` > `nav_row_logo` | 24px outlined icon tile; Paper White logo tile when the CMS item has a logo |
+| Tile | `nav_row_icon_wrap` > `nav_row_icon` + `nav_row_icon_border`, or `nav_row_logo_wrap` > `nav_row_logo` | 24px outlined icon tile; logo tile when the CMS item has a logo: `swatch/paper-white` fill, logo 20px inset 2px |
 | Text | `nav_row_content` > `nav_row_title`, `nav_row_text` | text optional, max 2 lines |
 | Extras | `nav_row_external`, `nav_row_bg`, `nav_icon_svg` | external arrow; hover tint; SVG drawn by navIcons |
 | Quick link | `nav_quick_wrap` > `nav_quick_title`, `nav_quick_arrow`, `nav_quick_bg` | |

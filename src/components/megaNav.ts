@@ -155,6 +155,7 @@ const addHighlights = (root: HTMLElement, groups: HTMLElement[]): void => {
   const template = root.querySelector<HTMLElement>(`${TEMPLATES} .nav_group_highlight`);
   if (!gsap || !template) return;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const desktop = window.matchMedia(DESKTOP);
 
   groups.forEach((group) => {
     const list = group.querySelector<HTMLElement>(LIST);
@@ -181,6 +182,7 @@ const addHighlights = (root: HTMLElement, groups: HTMLElement[]): void => {
     fade.to(highlight, { opacity: 1, duration: 0.2 });
 
     const moveTo = (target: HTMLElement) => {
+      if (!desktop.matches) return;
       const box = target.getBoundingClientRect();
       const base = list.getBoundingClientRect();
       const to = {
@@ -230,11 +232,14 @@ export const megaNav = (): void => {
   if (!toggles.length || !panels.length) return;
 
   const groups = panels.flatMap((p) => buildGroups(root, p));
-  if (window.matchMedia(HOVER).matches) addHighlights(root, groups);
+  const hoverMq = window.matchMedia(HOVER);
+  if (hoverMq.matches) addHighlights(root, groups);
 
   const speed = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0.01 : 1;
   const d = (key: keyof typeof DUR) => DUR[key] * speed;
   const desktopMq = window.matchMedia(DESKTOP);
+  /* tablets get the desktop panels, opened by tap only */
+  const hovers = () => desktopMq.matches && hoverMq.matches;
 
   const name = (el: HTMLElement) => el.getAttribute('data-nav-toggle') || '';
   const panelOf = (key: string | null) =>
@@ -283,6 +288,15 @@ export const megaNav = (): void => {
 
   // ---- desktop ------------------------------------------------------------
 
+  // a killed timeline never reaches its own hide, so a fast flick strands its panel
+  const hideOthers = (...keep: HTMLElement[]) => {
+    panels.forEach((p) => {
+      if (keep.includes(p)) return;
+      gsap.set(p, { autoAlpha: 0 });
+      gsap.set(content(p), { autoAlpha: 1, x: 0, y: 0 });
+    });
+  };
+
   const resetDesktop = () => {
     kill();
     panels.forEach((p) => {
@@ -307,7 +321,7 @@ export const megaNav = (): void => {
     state.active = key;
     state.closing = false;
     setActive(key);
-    panels.forEach((p) => p !== panel && gsap.set(p, { autoAlpha: 0 }));
+    hideOthers(panel);
     const tl = gsap.timeline();
     state.tl = tl;
     if (bg) tl.to(bg, { height: panel.offsetHeight, duration: d('open'), ease: EASE }, 0);
@@ -335,6 +349,7 @@ export const megaNav = (): void => {
         ? 1
         : -1;
     kill();
+    hideOthers(fromEl, toEl);
     state.active = to;
     setActive(to);
     const out = d('contentOut');
@@ -366,13 +381,14 @@ export const megaNav = (): void => {
     state.closing = true;
     const tl = gsap.timeline({ onComplete: resetDesktop });
     state.tl = tl;
+    // every panel: one interrupted mid-switch may still be showing
     tl.to(
-      content(panel),
+      panels.flatMap((p) => [...content(p)]),
       { autoAlpha: 0, y: -4, duration: d('contentOut') * 0.7, ease: 'power2.in' },
       0
     );
     if (bg) tl.to(bg, { height: 0, duration: d('close'), ease: 'power2.in' }, 0.05);
-    tl.set(panel, { autoAlpha: 0 });
+    tl.set(panels, { autoAlpha: 0 });
   };
 
   const scheduleClose = () => {
@@ -397,11 +413,13 @@ export const megaNav = (): void => {
   /* the menu's visible rows: each item's link (not its panel) and the actions */
   const rows = (): Element[] =>
     menu
-      ? [...menu.children].flatMap((child) =>
-          child.querySelector(PANEL)
-            ? [...child.children].filter((c) => !c.matches(PANEL))
-            : [child]
-        )
+      ? [...menu.children]
+          .filter((child) => !child.matches('.nav_hover_pill'))
+          .flatMap((child) =>
+            child.querySelector(PANEL)
+              ? [...child.children].filter((c) => !c.matches(PANEL))
+              : [child]
+          )
       : [];
   const chrome = () => [back, logo].filter((el): el is HTMLElement => !!el);
 
@@ -530,7 +548,7 @@ export const megaNav = (): void => {
   toggles.forEach((toggle) => {
     const key = name(toggle);
     on(toggle, 'mouseenter', () => {
-      if (!desktopMq.matches) return;
+      if (!hovers()) return;
       clearTimers();
       state.enterTimer = window.setTimeout(() => open(key), state.active ? 0 : HOVER_ENTER);
     });
@@ -577,11 +595,11 @@ export const megaNav = (): void => {
   });
 
   // plain links in the bar close an open panel on hover
-  root.querySelectorAll<HTMLElement>('.nav_links_list a').forEach((a) => {
+  root.querySelectorAll<HTMLElement>(`${MENU} a`).forEach((a) => {
     if (a.closest(PANEL)) return;
-    on(a, 'mouseenter', () => desktopMq.matches && state.active && scheduleClose());
+    on(a, 'mouseenter', () => hovers() && state.active && scheduleClose());
   });
-  on(root, 'mouseleave', () => desktopMq.matches && scheduleClose());
+  on(root, 'mouseleave', () => hovers() && scheduleClose());
   on(root, 'mouseenter', () => window.clearTimeout(state.leaveTimer));
 
   on(document, 'keydown', (e: KeyboardEvent) => {
