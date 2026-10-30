@@ -15,7 +15,7 @@ Adfin's Webflow site is built on Lumos. Figma layers use the exact class each el
    - Review and documentation frames prefixed `Doc / `, kept outside component sets.
 7. **Colours bind to the Theme variables.** Borders are solid only, never dashed.
 8. **In Figma scripts, set names with `node.name = '...'` or a `name:` property**, so the hook can read them. Don't pass names positionally through helper functions.
-9. **In Webflow, hover uses Lumos triggers** (`data-trigger="hover focus"` and `--_trigger---on`), never `:hover`. Toggled state is `.is-active` only.
+9. **In Webflow, hover uses Lumos triggers** (`data-trigger="hover focus"` and `--_trigger---on`), never `:hover`. Toggled state is `.is-active` only. For open/closed visuals on a toggle with `data-state="expanded"`, read `--_state---false`: it is 0 when closed and 1 when open (`--_state---true` is the reverse).
 
 Greg's live classes stay as they are, even where they predate these rules (`nav_component`, `nav_dropdown_mega_*`). New work follows the rules.
 
