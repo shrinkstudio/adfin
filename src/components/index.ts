@@ -11,6 +11,7 @@ import { faqSchema } from './faqSchema';
 import { faqSearch } from './faqSearch';
 import { hubMap } from './hubMap';
 import { hubspotForms } from './hubspotForms';
+import { localeLinks } from './localeLinks';
 import { localeNudge } from './localeNudge';
 import { lottie } from './lottie';
 import { megaNav } from './megaNav';
@@ -41,6 +42,7 @@ export const components = (): void => {
   faqSearch();
   hubMap();
   hubspotForms();
+  localeLinks();
   localeNudge();
   lottie();
   navIcons();

@@ -60,13 +60,6 @@ const EASE = 'power3.out';
 
 const DUR = { open: 0.35, morph: 0.4, close: 0.25, contentIn: 0.3, contentOut: 0.2, stagger: 0.25 };
 
-/* locale subdirectories (as in localeNudge); CMS Link fields stay unprefixed */
-const LOCALES = ['ie', 'us'];
-const localePrefix = () => {
-  const first = window.location.pathname.split('/')[1]?.toLowerCase() || '';
-  return LOCALES.includes(first) ? `/${first}` : '';
-};
-
 /* the CMS Column option ("Right column"), or a plain true/on flag */
 const isOn = (value: string | null) => /^(true|on|yes|1|right.*)$/i.test((value || '').trim());
 
@@ -74,7 +67,7 @@ const isOn = (value: string | null) => /^(true|on|yes|1|right.*)$/i.test((value 
  * Trims one CMS item down to the markup its fields ask for, so the Designer
  * needs no conditional visibility: Item or Quick layout, the logo tile when a
  * logo is set (otherwise the icon tile), and the external arrow and new tab
- * only for external links. Internal links get the locale prefix on /ie and /us.
+ * only for external links.
  */
 const prepareItem = (item: HTMLElement): void => {
   const layout = (item.getAttribute('data-nav-layout') || '').trim().toLowerCase();
@@ -91,15 +84,8 @@ const prepareItem = (item: HTMLElement): void => {
   const external =
     isOn(item.getAttribute('data-nav-external')) ||
     (!!link && !!link.hostname && link.hostname !== window.location.hostname);
-  if (!external) {
-    item.querySelectorAll('.nav_row_external').forEach((el) => el.remove());
-    const prefix = localePrefix();
-    item.querySelectorAll<HTMLAnchorElement>('a[href^="/"]').forEach((a) => {
-      const href = a.getAttribute('href') || '';
-      if (prefix && !href.startsWith('//') && href !== prefix && !href.startsWith(`${prefix}/`))
-        a.setAttribute('href', prefix + href);
-    });
-  } else
+  if (!external) item.querySelectorAll('.nav_row_external').forEach((el) => el.remove());
+  else
     item.querySelectorAll<HTMLAnchorElement>('a').forEach((a) => {
       a.target = '_blank';
       a.rel = 'noopener';
