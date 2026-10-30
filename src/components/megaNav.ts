@@ -511,6 +511,8 @@ export const megaNav = (): void => {
     menu.classList.toggle(ACTIVE, openMenu);
     document.documentElement.style.overflow = openMenu ? 'hidden' : '';
     if (openMenu) {
+      // the banner sits above the bar, so the menu starts wherever the bar ends
+      if (bar) gsap.set(menu, { top: bar.getBoundingClientRect().bottom });
       gsap.fromTo(menu, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.35 * speed, ease: EASE });
       gsap.fromTo(
         rows(),
@@ -641,7 +643,13 @@ export const megaNav = (): void => {
     const hide = !busy && y > Math.max(HIDE_AFTER, root.offsetHeight) && y > lastY;
     if (hide !== hidden && (hide || y < lastY || busy)) {
       hidden = hide;
-      gsap.to(root, { yPercent: hide ? -100 : 0, duration: 0.35 * speed, ease: EASE });
+      gsap.to(root, {
+        yPercent: hide ? -100 : 0,
+        duration: 0.35 * speed,
+        ease: EASE,
+        // a leftover transform would anchor the fixed phone menu to the nav
+        onComplete: () => !hide && gsap.set(root, { clearProps: 'transform' }),
+      });
     }
     lastY = y;
   };
@@ -660,7 +668,7 @@ export const megaNav = (): void => {
   const setMode = () => {
     if (desktopMq.matches) {
       if (state.menuOpen) setMenu(false);
-      if (menu) gsap.set(menu, { clearProps: 'opacity,visibility' });
+      if (menu) gsap.set(menu, { clearProps: 'opacity,visibility,top' });
       gsap.set(chrome(), { clearProps: 'opacity,visibility' });
       placeActions(false);
       resetDesktop();
