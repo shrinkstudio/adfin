@@ -15,17 +15,15 @@ declare global {
 //     [data-nav-bar]                            nav_bar, .is-active once scrolled
 //     [data-nav-toggle="product"]               nav_menu_link button, one per menu
 //     [data-nav-panel="product"]                nav_panel_wrap, one per menu
-//       [data-nav-main] / [data-nav-aside]      group columns / right column
+//       [data-nav-main]                         group columns
 //       [data-nav-item]                         Nav Links CMS items (nav_group_item), with
-//                                               CMS-bound data-nav-group, data-nav-layout
-//                                               (Item|Quick), data-nav-aside (Column:
-//                                               Main|Right column); external links are detected
+//                                               CMS-bound data-nav-group and data-nav-layout
+//                                               (Item|Quick); external links are detected
 //     [data-nav-bg]                             desktop panel background, morphs height
 //     [data-nav-burger] / [data-nav-menu]       phone menu button / menu
 //     [data-nav-back] / [data-nav-logo]         phone Back button / the logo it replaces
 //     [data-nav-actions]                        locale + CTAs; moved into the phone menu
-//     .nav_hidden.u-display-none                templates: .nav_group_wrap,
-//                                               .nav_group_list.is-split, .nav_group_highlight
+//     .nav_hidden.u-display-none                template: .nav_group_wrap
 // State written: .is-active + aria-expanded on toggles and the burger, .is-active
 // on the open panel and the phone menu. Hover and colour live in CSS. On phones
 // each panel is its own screen over the menu, with Back in the bar.
@@ -50,8 +48,6 @@ const DESKTOP = '(min-width: 62em)';
 const HOVER = '(hover: hover) and (pointer: fine)';
 const HOVER_ENTER = 120;
 const HOVER_LEAVE = 150;
-/* groups with this many links run in two columns */
-const SPLIT_AT = 7;
 /* scrolled state past this, auto-hide only past the top of the page */
 const SCROLLED_AT = 10;
 const HIDE_AFTER = 100;
@@ -64,10 +60,9 @@ const DUR = { open: 0.35, morph: 0.4, close: 0.25, contentIn: 0.3, contentOut: 0
 const isOn = (value: string | null) => /^(true|on|yes|1|right.*)$/i.test((value || '').trim());
 
 /**
- * Trims one CMS item down to the markup its fields ask for, so the Designer
- * needs no conditional visibility: Item or Quick layout, the logo tile when a
- * logo is set (otherwise the icon tile), and the external arrow and new tab
- * only for external links.
+ * Trims one CMS item down to the markup its layout asks for, so the Designer
+ * needs no conditional visibility, and opens external links in a new tab. Links
+ * are text only, so the icon and logo tiles go.
  */
 const prepareItem = (item: HTMLElement): void => {
   const layout = (item.getAttribute('data-nav-layout') || '').trim().toLowerCase();
@@ -76,27 +71,27 @@ const prepareItem = (item: HTMLElement): void => {
       .querySelectorAll(layout === 'quick' ? '.nav_row_wrap' : '.nav_quick_wrap')
       .forEach((el) => el.remove());
   }
-  const logo = item.querySelector<HTMLImageElement>('.nav_row_logo');
-  const hasLogo =
-    !!logo && !logo.classList.contains('w-dyn-bind-empty') && !!logo.getAttribute('src');
-  item.querySelector(hasLogo ? '.nav_row_icon_wrap' : '.nav_row_logo_wrap')?.remove();
+  item
+    .querySelectorAll(
+      '.nav_row_icon_wrap, .nav_row_logo_wrap, .nav_row_external, .nav_row_text.w-dyn-bind-empty'
+    )
+    .forEach((el) => el.remove());
   const link = item.querySelector<HTMLAnchorElement>('a[href]');
   const external =
     isOn(item.getAttribute('data-nav-external')) ||
     (!!link && !!link.hostname && link.hostname !== window.location.hostname);
-  if (!external) item.querySelectorAll('.nav_row_external').forEach((el) => el.remove());
-  else
-    item.querySelectorAll<HTMLAnchorElement>('a').forEach((a) => {
-      a.target = '_blank';
-      a.rel = 'noopener';
-    });
+  item.querySelectorAll<HTMLAnchorElement>('a').forEach((a) => {
+    a.setAttribute('data-trigger', 'hover-other');
+    if (!external) return;
+    a.target = '_blank';
+    a.rel = 'noopener';
+  });
 };
 
 /**
- * Sorts a panel's Nav Links CMS items into labelled groups. The list arrives
+ * Sorts a panel's Nav Links CMS items into labelled columns. The list arrives
  * sorted by group order then link order, so consecutive items that share a
- * group become one `nav_group_wrap` (cloned from the hidden template), placed
- * in the right column when the item's "Right column" flag is visible.
+ * group become one `nav_group_wrap` (cloned from the hidden template).
  */
 const buildGroups = (root: HTMLElement, panel: HTMLElement): HTMLElement[] => {
   const items = [...panel.querySelectorAll<HTMLElement>(ITEM)];
@@ -108,11 +103,6 @@ const buildGroups = (root: HTMLElement, panel: HTMLElement): HTMLElement[] => {
     return [];
   }
   const main = panel.querySelector<HTMLElement>('[data-nav-main]') || panel;
-  // CMS items carry data-nav-aside too (their Column value), so skip them here
-  const aside = panel.querySelector<HTMLElement>(`[data-nav-aside]:not(${ITEM})`) || main;
-  const isAside = (item: HTMLElement) =>
-    isOn(item.getAttribute('data-nav-aside')) ||
-    !!item.querySelector('[data-nav-aside-flag]:not(.w-condition-invisible)');
 
   const groups: HTMLElement[] = [];
   let list: HTMLElement | null = null;
@@ -126,86 +116,25 @@ const buildGroups = (root: HTMLElement, panel: HTMLElement): HTMLElement[] => {
       if (label) label.textContent = name;
       list = group.querySelector<HTMLElement>(LIST) || group;
       list.replaceChildren();
-      // main groups are the bordered columns; right column groups just stack
-      group.classList.toggle('is-column', !isAside(item));
-      (isAside(item) ? aside : main).appendChild(group);
+      list.setAttribute('data-trigger', 'group');
+      group.classList.add('is-column');
+      main.appendChild(group);
       groups.push(group);
       current = name;
     }
     list.appendChild(item);
   });
 
+  // only a closing link under other links keeps its arrow
   groups.forEach((group) => {
-    const groupList = group.querySelector<HTMLElement>(LIST);
-    if (groupList && groupList.children.length >= SPLIT_AT) groupList.classList.add('is-split');
+    if (group.querySelector('.nav_row_wrap')) return;
+    group.querySelectorAll('.nav_quick_arrow').forEach((el) => el.remove());
   });
   // the emptied Collection List wrappers would only add stray gaps
   panel.querySelectorAll('.w-dyn-list').forEach((l) => {
     if (!l.querySelector(ITEM)) l.remove();
   });
   return groups;
-};
-
-/**
- * One highlight per group glides between its links, the same mechanics as
- * the bar's navHover pill. Desktop pointers only.
- */
-const addHighlights = (root: HTMLElement, groups: HTMLElement[]): void => {
-  const { gsap } = window;
-  const template = root.querySelector<HTMLElement>(`${TEMPLATES} .nav_group_highlight`);
-  if (!gsap || !template) return;
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const desktop = window.matchMedia(DESKTOP);
-
-  groups.forEach((group) => {
-    const list = group.querySelector<HTMLElement>(LIST);
-    if (!list) return;
-    const links = [...list.children].filter((c): c is HTMLElement => c instanceof HTMLElement);
-    const highlight = template.cloneNode(true) as HTMLElement;
-    highlight.setAttribute('aria-hidden', 'true');
-    list.prepend(highlight);
-    gsap.set(highlight, {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      opacity: 0,
-      pointerEvents: 'none',
-    });
-
-    let between = false;
-    const fade = gsap.timeline({
-      paused: true,
-      onReverseComplete: () => {
-        between = false;
-      },
-    });
-    fade.to(highlight, { opacity: 1, duration: 0.2 });
-
-    const moveTo = (target: HTMLElement) => {
-      if (!desktop.matches) return;
-      const box = target.getBoundingClientRect();
-      const base = list.getBoundingClientRect();
-      const to = {
-        x: box.left - base.left,
-        y: box.top - base.top,
-        width: box.width,
-        height: box.height,
-      };
-      if (between && !reduced) gsap.to(highlight, { ...to, duration: 0.3, ease: 'power1.inOut' });
-      else gsap.set(highlight, to);
-      between = true;
-      fade.play();
-    };
-
-    links.forEach((link) => {
-      on(link, 'mouseenter', () => moveTo(link));
-      on(link, 'focusin', () => moveTo(link));
-    });
-    on(list, 'mouseleave', () => fade.reverse());
-    on(list, 'focusout', (e: FocusEvent) => {
-      if (!list.contains(e.relatedTarget as Node)) fade.reverse();
-    });
-  });
 };
 
 /**
@@ -233,7 +162,6 @@ export const megaNav = (): void => {
 
   const groups = panels.flatMap((p) => buildGroups(root, p));
   const hoverMq = window.matchMedia(HOVER);
-  if (hoverMq.matches) addHighlights(root, groups);
 
   const speed = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0.01 : 1;
   const d = (key: keyof typeof DUR) => DUR[key] * speed;
@@ -307,11 +235,21 @@ export const megaNav = (): void => {
   };
   const unclip = () => panels.forEach((p) => p.style.removeProperty('clip-path'));
 
+  /* tall panels scroll inside the space left under the nav */
+  const fit = (panel: HTMLElement) => {
+    panel.style.maxHeight = `${window.innerHeight - root.getBoundingClientRect().bottom}px`;
+    panel.style.overflowY = 'auto';
+  };
+
   const resetDesktop = () => {
     kill();
     unclip();
     panels.forEach((p) => {
-      gsap.set(p, { autoAlpha: 0, x: 0, clearProps: 'height,overflow,pointerEvents,transform' });
+      gsap.set(p, {
+        autoAlpha: 0,
+        x: 0,
+        clearProps: 'height,maxHeight,overflow,overflowY,pointerEvents,transform',
+      });
       gsap.set(content(p), { autoAlpha: 1, x: 0, xPercent: 0, y: 0 });
     });
     if (bg) gsap.set(bg, { height: 0, autoAlpha: 0 });
@@ -333,6 +271,7 @@ export const megaNav = (): void => {
     state.closing = false;
     setActive(key);
     hideOthers(panel);
+    fit(panel);
     const tl = gsap.timeline();
     state.tl = tl;
     if (bg) {
@@ -374,6 +313,7 @@ export const megaNav = (): void => {
         : -1;
     kill();
     hideOthers(fromEl, toEl);
+    fit(toEl);
     state.active = to;
     setActive(to);
     // the old panel is gone before the new one shows, so they never overlap
@@ -467,7 +407,11 @@ export const megaNav = (): void => {
     gsap.killTweensOf([...rows(), ...chrome()]);
     panels.forEach((p) => {
       p.classList.remove(ACTIVE);
-      gsap.set(p, { clearProps: 'height,overflow,transform', autoAlpha: 0, pointerEvents: 'none' });
+      gsap.set(p, {
+        clearProps: 'height,maxHeight,overflow,overflowY,transform',
+        autoAlpha: 0,
+        pointerEvents: 'none',
+      });
       gsap.set(content(p), { clearProps: 'all' });
     });
     gsap.set([...rows(), ...chrome()], { clearProps: 'opacity,visibility,transform' });
