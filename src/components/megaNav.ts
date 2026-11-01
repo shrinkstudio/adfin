@@ -234,11 +234,12 @@ export const megaNav = (): void => {
   };
 
   // the background grows and shrinks more slowly than the panels change, so
-  // panels are cut to it: nothing shows past its bottom border
+  // panels are cut to it: nothing shows past its bottom border or covers it
   const clipToBg = () => {
     const height = Number(gsap.getProperty(bg, 'height'));
+    const border = parseFloat(getComputedStyle(bg as HTMLElement).borderBottomWidth);
     panels.forEach((p) => {
-      p.style.clipPath = `inset(0 0 ${Math.max(0, p.offsetHeight - height)}px 0)`;
+      p.style.clipPath = `inset(0 0 ${Math.max(0, p.offsetHeight - height + border)}px 0)`;
     });
   };
   const unclip = () => panels.forEach((p) => p.style.removeProperty('clip-path'));
