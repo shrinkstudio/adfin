@@ -66,6 +66,10 @@ The source is the studio nav: `~/shrink/src/modules/mega-nav.ts` and `hover-list
 
 Text colour never changes on hover (Ben: white stays crisp white on Brand, green on Light).
 
+**1 Nov, panel switch:** one 0.14s crossfade from whatever is showing, no slide or stagger. The old panel-then-new sequence read as a flash, worst when a flick crossed a middle item (317ms blank, now 0). Panels overlap for that 0.14s only.
+
+**1 Nov, bar 1:1 with Greg's Nav:** link padding `space-2`, height 2.5rem (so the pill is 40px, not the 44px button height asked for earlier), carets .4, divider 2.5rem, burger on `--nav--hamburger-*`. `nav_banner_wrap` is the container for the banner's xsmall variables and must stay at 1rem: Lumos queries in `em`, which use the container's own font size, so 12px there means they never fire on phones. Not on `nav_wrap`, because containment would trap the fixed phone menu.
+
 ## 3. Build steps
 
 1. [x] **Figma** (done 29 Oct, awaiting Ben's sign-off). Nav set `10520:440` (20 variants, every layer Lumos-named), `Nav Link` set `10543:522` (Layout x Tile x State, props Title/Text/External/Icon), `Nav Icons` `10543:339`, `Doc / Nav logos` `10542:339`, motion spec section 7 "Link hover".

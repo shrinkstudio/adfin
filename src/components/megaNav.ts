@@ -54,7 +54,15 @@ const HIDE_AFTER = 100;
 /* cubic-bezier(0.165, 0.84, 0.44, 1), the live nav's curve */
 const EASE = 'power3.out';
 
-const DUR = { open: 0.35, morph: 0.4, close: 0.25, contentIn: 0.3, contentOut: 0.2, stagger: 0.25 };
+const DUR = {
+  open: 0.35,
+  morph: 0.4,
+  close: 0.25,
+  contentIn: 0.3,
+  contentOut: 0.2,
+  stagger: 0.25,
+  swap: 0.14,
+};
 
 /* the CMS Column option ("Right column"), or a plain true/on flag */
 const isOn = (value: string | null) => /^(true|on|yes|1|right.*)$/i.test((value || '').trim());
@@ -263,7 +271,7 @@ export const megaNav = (): void => {
     if (!panel) return;
     if (state.active === key && !state.closing) return;
     if (state.active && state.active !== key && !state.closing) {
-      switchTo(state.active, key);
+      switchTo(key);
       return;
     }
     kill();
@@ -303,26 +311,22 @@ export const megaNav = (): void => {
     );
   };
 
-  const switchTo = (from: string, to: string) => {
-    const fromEl = panelOf(from);
+  // one crossfade from whatever is showing, so a flick over a middle item never
+  // cuts to an empty background
+  const switchTo = (to: string) => {
     const toEl = panelOf(to);
-    if (!fromEl || !toEl) return;
-    const dir =
-      toggles.indexOf(toggleOf(to) as HTMLElement) > toggles.indexOf(toggleOf(from) as HTMLElement)
-        ? 1
-        : -1;
+    if (!toEl) return;
     kill();
-    hideOthers(fromEl, toEl);
     fit(toEl);
     state.active = to;
     setActive(to);
-    // the old panel is gone before the new one shows, so they never overlap
-    const out = d('contentOut') * 0.7;
     const tl = gsap.timeline();
     state.tl = tl;
-    tl.to(content(fromEl), { autoAlpha: 0, x: dir * -24, duration: out, ease: 'power2.in' }, 0);
-    tl.set(fromEl, { autoAlpha: 0 }, out);
-    tl.set(content(fromEl), { x: 0 }, out);
+    tl.to(
+      panels.filter((p) => p !== toEl),
+      { autoAlpha: 0, duration: d('swap'), ease: 'none' },
+      0
+    );
     if (bg) {
       tl.to(
         bg,
@@ -336,19 +340,8 @@ export const megaNav = (): void => {
         0
       );
     }
-    tl.set(toEl, { autoAlpha: 1 }, out);
-    tl.fromTo(
-      content(toEl),
-      { autoAlpha: 0, x: dir * 24, y: 0 },
-      {
-        autoAlpha: 1,
-        x: 0,
-        duration: d('contentIn'),
-        ease: EASE,
-        stagger: { amount: d('stagger') },
-      },
-      out
-    );
+    tl.set(content(toEl), { autoAlpha: 1, x: 0, y: 0 }, 0);
+    tl.to(toEl, { autoAlpha: 1, duration: d('swap'), ease: 'none' }, 0);
   };
 
   const close = () => {
