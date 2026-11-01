@@ -70,6 +70,10 @@ Text colour never changes on hover (Ben: white stays crisp white on Brand, green
 
 **1 Nov, bar 1:1 with Greg's Nav:** link padding `space-2`, height 2.5rem (so the pill is 40px, not the 44px button height asked for earlier), carets .4, divider 2.5rem, burger on `--nav--hamburger-*`. `nav_banner_wrap` is the container for the banner's xsmall variables and must stay at 1rem: Lumos queries in `em`, which use the container's own font size, so 12px there means they never fire on phones. Not on `nav_wrap`, because containment would trap the fixed phone menu.
 
+**1 Nov, panel bottom border:** the border stays on `nav_panel_bg`. `nav_panel_wrap` carries 1px of bottom padding so it shows through, and `clipToBg` stops above it so it stays visible during the morph.
+
+**1 Nov, phone actions:** the head rule `.nav_bar_divider + .nav_bar_actions { display: none }` under 991px hides the actions until the bundle moves them into the menu, which stops them flashing in the bar on load.
+
 ## 3. Build steps
 
 1. [x] **Figma** (done 29 Oct, awaiting Ben's sign-off). Nav set `10520:440` (20 variants, every layer Lumos-named), `Nav Link` set `10543:522` (Layout x Tile x State, props Title/Text/External/Icon), `Nav Icons` `10543:339`, `Doc / Nav logos` `10542:339`, motion spec section 7 "Link hover".
