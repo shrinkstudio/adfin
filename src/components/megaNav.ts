@@ -48,9 +48,8 @@ const DESKTOP = '(min-width: 62em)';
 const HOVER = '(hover: hover) and (pointer: fine)';
 const HOVER_ENTER = 120;
 const HOVER_LEAVE = 150;
-/* scrolled state past this, auto-hide only past the top of the page */
+/* scrolled state past this */
 const SCROLLED_AT = 10;
-const HIDE_AFTER = 100;
 /* cubic-bezier(0.165, 0.84, 0.44, 1), the live nav's curve */
 const EASE = 'power3.out';
 
@@ -148,9 +147,9 @@ const buildGroups = (root: HTMLElement, panel: HTMLElement): HTMLElement[] => {
 /**
  * Adfin's nav: one desktop panel background that morphs between the Product,
  * Customers and Resources panels (hover intent, content fades in, keyboard),
- * a screen per panel on phones (Back in the bar), and a bar that hides on scroll down and returns on
- * scroll up. Panel content comes from the Nav Links CMS, grouped here. Inert
- * until the page has `[data-nav]`, so the current nav is untouched.
+ * and a screen per panel on phones (Back in the bar). The bar stays put on
+ * scroll. Panel content comes from the Nav Links CMS, grouped here. Inert until
+ * the page has `[data-nav]`, so the current nav is untouched.
  */
 export const megaNav = (): void => {
   const { gsap } = window;
@@ -609,27 +608,11 @@ export const megaNav = (): void => {
   }
   if (back) on(back, 'click', closeScreen);
 
-  // ---- scroll: scrolled state, hide on the way down, show on the way up ----
-  let lastY = window.scrollY;
-  let hidden = false;
+  // ---- scroll: scrolled state ----------------------------------------------
   let ticking = false;
   const onScroll = () => {
     ticking = false;
-    const y = window.scrollY;
-    bar?.classList.toggle(ACTIVE, y > SCROLLED_AT);
-    const busy = !!state.active || state.menuOpen;
-    const hide = !busy && y > Math.max(HIDE_AFTER, root.offsetHeight) && y > lastY;
-    if (hide !== hidden && (hide || y < lastY || busy)) {
-      hidden = hide;
-      gsap.to(root, {
-        yPercent: hide ? -100 : 0,
-        duration: 0.35 * speed,
-        ease: EASE,
-        // a leftover transform would anchor the fixed phone menu to the nav
-        onComplete: () => !hide && gsap.set(root, { clearProps: 'transform' }),
-      });
-    }
-    lastY = y;
+    bar?.classList.toggle(ACTIVE, window.scrollY > SCROLLED_AT);
   };
   on(
     window,

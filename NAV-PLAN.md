@@ -74,6 +74,8 @@ Text colour never changes on hover (Ben: white stays crisp white on Brand, green
 
 **1 Nov, phone actions:** the head rule `.nav_bar_divider + .nav_bar_actions { display: none }` under 991px hides the actions until the bundle moves them into the menu, which stops them flashing in the bar on load.
 
+**2 Nov, hide on scroll removed:** client request. The bar stays pinned on scroll, up and down. `.is-active` on `nav_bar` past 10px stays.
+
 ## 3. Build steps
 
 1. [x] **Figma** (done 29 Oct, awaiting Ben's sign-off). Nav set `10520:440` (20 variants, every layer Lumos-named), `Nav Link` set `10543:522` (Layout x Tile x State, props Title/Text/External/Icon), `Nav Icons` `10543:339`, `Doc / Nav logos` `10542:339`, motion spec section 7 "Link hover".
