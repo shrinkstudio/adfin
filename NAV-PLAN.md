@@ -76,6 +76,8 @@ Text colour never changes on hover (Ben: white stays crisp white on Brand, green
 
 **2 Nov, hide on scroll removed:** client request. The bar stays pinned on scroll, up and down. `.is-active` on `nav_bar` past 10px stays.
 
+**2 Nov, emptied nav lists stay in the DOM:** `buildGroups` was deleting the three emptied Collection List wrappers. Finsweet List finds its list on each next page by index among `.w-dyn-list`, so Load more on `/resources` and `/blog` pulled in nav items. They are now hidden with `display: none`. Never remove a `.w-dyn-list` from the page at runtime.
+
 ## 3. Build steps
 
 1. [x] **Figma** (done 29 Oct, awaiting Ben's sign-off). Nav set `10520:440` (20 variants, every layer Lumos-named), `Nav Link` set `10543:522` (Layout x Tile x State, props Title/Text/External/Icon), `Nav Icons` `10543:339`, `Doc / Nav logos` `10542:339`, motion spec section 7 "Link hover".

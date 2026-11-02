@@ -137,9 +137,10 @@ const buildGroups = (root: HTMLElement, panel: HTMLElement): HTMLElement[] => {
     if (group.querySelector('.nav_row_wrap')) return;
     group.querySelectorAll('.nav_quick_arrow').forEach((el) => el.remove());
   });
-  // the emptied Collection List wrappers would only add stray gaps
-  panel.querySelectorAll('.w-dyn-list').forEach((l) => {
-    if (!l.querySelector(ITEM)) l.remove();
+  // hide the emptied Collection List wrappers: Finsweet List finds its list on
+  // the next page by its index among .w-dyn-list, so these must stay in the DOM
+  panel.querySelectorAll<HTMLElement>('.w-dyn-list').forEach((l) => {
+    if (!l.querySelector(ITEM)) l.style.display = 'none';
   });
   return groups;
 };
