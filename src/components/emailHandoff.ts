@@ -22,6 +22,17 @@ const log = createLogger('emailHandoff');
  */
 const DEFAULT_DESTINATION = '/demo-form';
 
+/* locale subdirectories (as in localeLinks) */
+const LOCALES = ['ie', 'us'];
+
+/** Keeps /ie and /us visitors on their own demo form, which books with their own team. */
+const localise = (path: string): string => {
+  const first = window.location.pathname.split('/')[1]?.toLowerCase() || '';
+  if (!LOCALES.includes(first) || !path.startsWith('/') || path.startsWith('//')) return path;
+  if (LOCALES.includes(path.split(/[/?#]/)[1])) return path;
+  return `/${first}${path}`;
+};
+
 const createEmailHandoff = (wrap: HTMLElement): Destroyable | null => {
   const form = wrap instanceof HTMLFormElement ? wrap : wrap.querySelector('form');
   if (!form) return null;
@@ -29,7 +40,7 @@ const createEmailHandoff = (wrap: HTMLElement): Destroyable | null => {
   const input = form.querySelector<HTMLInputElement>('input[type="email"], input[name*="mail" i]');
   if (!input) return null;
 
-  const destination = wrap.getAttribute('data-email-capture') || DEFAULT_DESTINATION;
+  const destination = localise(wrap.getAttribute('data-email-capture') || DEFAULT_DESTINATION);
   const success = form.closest('.w-form')?.querySelector<HTMLElement>('.w-form-done');
 
   const cleanup = createCleanup();
