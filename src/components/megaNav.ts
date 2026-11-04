@@ -66,6 +66,10 @@ const DUR = {
 /* the CMS Column option ("Right column"), or a plain true/on flag */
 const isOn = (value: string | null) => /^(true|on|yes|1|right.*)$/i.test((value || '').trim());
 
+/* a group whose Column is "Right column" (or "Stack…") sits under the group before it */
+const stacks = (item: HTMLElement) =>
+  /^(right|stack|under)/i.test((item.getAttribute('data-nav-aside') || '').trim());
+
 /**
  * Trims one CMS item down to the markup its layout asks for, so the Designer
  * needs no conditional visibility, and opens external links in a new tab. Links
@@ -98,7 +102,8 @@ const prepareItem = (item: HTMLElement): void => {
 /**
  * Sorts a panel's Nav Links CMS items into labelled columns. The list arrives
  * sorted by group order then link order, so consecutive items that share a
- * group become one `nav_group_wrap` (cloned from the hidden template).
+ * group become one `nav_group_wrap` (cloned from the hidden template). A group
+ * set to stack adds its label and list to the column before it instead.
  */
 const buildGroups = (root: HTMLElement, panel: HTMLElement): HTMLElement[] => {
   const items = [...panel.querySelectorAll<HTMLElement>(ITEM)];
@@ -121,12 +126,19 @@ const buildGroups = (root: HTMLElement, panel: HTMLElement): HTMLElement[] => {
       const group = template.cloneNode(true) as HTMLElement;
       const label = group.querySelector<HTMLElement>(LABEL);
       if (label) label.textContent = name;
+      const column = groups[groups.length - 1];
+      const stacked = !!column && stacks(item) && !!label && !!group.querySelector(LIST);
       list = group.querySelector<HTMLElement>(LIST) || group;
       list.replaceChildren();
       list.setAttribute('data-trigger', 'group');
-      group.classList.add('is-column');
-      main.appendChild(group);
-      groups.push(group);
+      if (stacked && label) {
+        // a second label and list in the previous column
+        column.append(label, list);
+      } else {
+        group.classList.add('is-column');
+        main.appendChild(group);
+        groups.push(group);
+      }
       current = name;
     }
     list.appendChild(item);
