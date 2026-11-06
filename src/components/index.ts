@@ -3,6 +3,7 @@ import { anchorLinks } from './anchorLinks';
 import { anchorScroll } from './anchorScroll';
 import { askAi } from './askAi';
 import { changelogVideo } from './changelogVideo';
+import { consentLink } from './consentLink';
 import { customerLogos } from './customerLogos';
 import { duoTab } from './duoTab';
 import { emailHandoff } from './emailHandoff';
@@ -34,6 +35,7 @@ export const components = (): void => {
   anchorScroll();
   askAi();
   changelogVideo();
+  consentLink();
   customerLogos();
   duoTab();
   emailHandoff();
