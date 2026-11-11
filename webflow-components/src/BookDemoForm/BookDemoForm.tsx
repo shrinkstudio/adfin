@@ -152,7 +152,13 @@ export function BookDemoForm(props: BookDemoFormProps) {
 
     setSubmitting(true);
     setFormError(null);
-    const hs = await submitToHubSpot(hubspotPortalId, hubspotFormGuid, values);
+    let hs = await submitToHubSpot(hubspotPortalId, hubspotFormGuid, values);
+    // a HubSpot form without a matching industry option rejects the whole
+    // submission; retry without it so the booking still goes through
+    if (!hs.ok && hs.status === 400 && values.industry) {
+      const { industry: _industry, ...rest } = values;
+      hs = await submitToHubSpot(hubspotPortalId, hubspotFormGuid, rest);
+    }
     if (!hs.ok) {
       setFormError('Something went wrong submitting the form. Please try again.');
       setSubmitting(false);

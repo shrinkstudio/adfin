@@ -1,8 +1,8 @@
 /**
  * Field + step config for the book-a-demo form. Field `name`s are the HubSpot
- * contact property names (firstname, lastname, email, company, territory,
- * numemployees) — the same set the live adfin.com/book-demo form submits — so
- * they map straight through to HubSpot and RevenueHero routing.
+ * contact property names (firstname, lastname, email, company, industry,
+ * territory, numemployees), so they map straight through to HubSpot and
+ * RevenueHero routing.
  */
 export type FieldType = 'text' | 'email' | 'select';
 
@@ -26,6 +26,12 @@ export const TERRITORIES = [
   'North East', 'Wales', 'Northern Ireland', 'Channel Islands', 'Other',
 ];
 
+/* values match the industry options in Adfin's RevenueHero routing */
+export const INDUSTRIES = [
+  'Accounting or bookkeeper', 'Managed Service Provider', 'Property and Real Estate',
+  'Field Services', 'Law firm', 'Recruitment', 'Agency', 'Other',
+];
+
 export const NUM_EMPLOYEES = ['1-5', '5-25', '25-50', '50-100', '100-500', '500-1000', '1000+'];
 
 export const STEPS: StepDef[] = [
@@ -43,6 +49,7 @@ export const STEPS: StepDef[] = [
   {
     fields: [
       { name: 'company', label: 'Company name', type: 'text', required: true, autoComplete: 'organization' },
+      { name: 'industry', label: 'Industry', type: 'select', required: true, options: INDUSTRIES },
       { name: 'territory', label: 'Company location', type: 'select', required: true, options: TERRITORIES },
       { name: 'numemployees', label: 'Number of employees', type: 'select', required: true, options: NUM_EMPLOYEES },
     ],
